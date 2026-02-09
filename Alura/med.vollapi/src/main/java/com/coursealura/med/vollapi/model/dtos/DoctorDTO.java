@@ -2,27 +2,38 @@ package com.coursealura.med.vollapi.model.dtos;
 
 import com.coursealura.med.vollapi.model.Adress;
 import com.coursealura.med.vollapi.model.enums.Specialty;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 import java.io.Serializable;
 
 public class DoctorDTO implements Serializable {
 
+    @NotBlank
     private String name;
+    @NotBlank
+    @Email
     private String email;
-    private String phone;
+    @NotBlank
+    @Pattern(regexp = "\\d{4,6}")
     private String crm;
 
+    @NotNull
     private Specialty specialty;
+    @NotNull
+    @Valid
     private Adress adress;
 
     public DoctorDTO(){
 
     }
 
-    public DoctorDTO(String name, String email, String phone, String crm, Specialty specialty, Adress adress) {
+    public DoctorDTO(String name, String email, String crm, Specialty specialty, Adress adress) {
         this.name = name;
         this.email = email;
-        this.phone = phone;
         this.crm = crm;
         this.specialty = specialty;
         this.adress = adress;
@@ -42,14 +53,6 @@ public class DoctorDTO implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public String getCrm() {
@@ -81,7 +84,6 @@ public class DoctorDTO implements Serializable {
         return "Doctor{" +
                 "name='" + name + '\'' +
                 ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
                 ", crm='" + crm + '\'' +
                 ", specialty=" + specialty +
                 ", adress=" + adress +

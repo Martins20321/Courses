@@ -2,6 +2,8 @@
 
     import jakarta.persistence.Column;
     import jakarta.persistence.Embeddable;
+    import jakarta.validation.constraints.NotBlank;
+    import jakarta.validation.constraints.Pattern;
     import lombok.*;
 
     import java.io.Serializable;
@@ -14,15 +16,22 @@
     public class Adress implements Serializable {
 
         @Column(name = "street_Adress")
+        @NotBlank
         private String streetAdress;
+        @NotBlank
+        private String neighborhood;
+        @NotBlank
+        private String city;
+        @NotBlank
+        private String state;
+        @Column(name = "postal_Code")
+        @NotBlank
+        @Pattern(regexp = "\\d{8}")
+        private String postalCode;
+
         private String number;
         @Column(name = "additional_Information")
         private String additionalInformation;
-        private String neighborhood;
-        private String city;
-        private String state;
-        @Column(name = "postal_Code")
-        private String postalCode;
 
         public Adress(Adress adress) {
             this.streetAdress = adress.streetAdress;

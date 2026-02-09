@@ -4,6 +4,7 @@ import com.coursealura.med.vollapi.model.Adress;
 import com.coursealura.med.vollapi.model.Doctor;
 import com.coursealura.med.vollapi.model.dtos.DoctorDTO;
 import com.coursealura.med.vollapi.model.repositories.DoctorRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ public class DoctorController {
 
     @PostMapping
     @Transactional
-    public void insert(@RequestBody DoctorDTO doctorDTO){
+    public void insert(@RequestBody @Valid DoctorDTO doctorDTO){
         repository.save(new Doctor(doctorDTO));
     }
 }
