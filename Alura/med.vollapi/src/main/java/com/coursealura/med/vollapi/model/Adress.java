@@ -1,5 +1,6 @@
 package com.coursealura.med.vollapi.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.*;
 
@@ -12,22 +13,23 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class Adress implements Serializable {
 
+    @Column(name = "streetAdress")
     private String streetAdress;
     private String number;
+    @Column(name = "additionalInformation")
     private String additionalInformation;
     private String neighborhood;
     private String city;
     private String state;
+    @Column(name = "postalCode")
     private String postalCode;
 
     public Adress(Adress adress) {
-        this.streetAdress = streetAdress;
-        this.number = number;
-        this.additionalInformation = additionalInformation;
-        this.neighborhood = neighborhood;
-        this.city = city;
-        this.state = state;
-        this.postalCode = postalCode;
+        this.streetAdress = adress.streetAdress;
+        this.neighborhood = adress.neighborhood;
+        this.city = adress.city;
+        this.state = adress.state;
+        this.postalCode = adress.postalCode;
     }
 
     @Override

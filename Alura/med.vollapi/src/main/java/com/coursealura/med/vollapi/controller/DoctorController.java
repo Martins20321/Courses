@@ -5,6 +5,7 @@ import com.coursealura.med.vollapi.model.Doctor;
 import com.coursealura.med.vollapi.model.dtos.DoctorDTO;
 import com.coursealura.med.vollapi.model.repositories.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,6 +16,7 @@ public class DoctorController {
     private DoctorRepository repository;
 
     @PostMapping
+    @Transactional
     public void insert(@RequestBody DoctorDTO doctorDTO){
         repository.save(new Doctor(doctorDTO));
     }
