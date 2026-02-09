@@ -1,5 +1,6 @@
 package com.coursealura.med.vollapi.model;
 
+import com.coursealura.med.vollapi.model.dtos.DoctorDTO;
 import com.coursealura.med.vollapi.model.enums.Specialty;
 import jakarta.persistence.*;
 import lombok.*;
@@ -30,6 +31,14 @@ public class Doctor implements Serializable {
 
     @Embedded
     private Adress adress;
+
+    public Doctor(DoctorDTO doctorDTO) {
+        this.name = doctorDTO.getName();
+        this.email = doctorDTO.getEmail();
+        this.crm = doctorDTO.getEmail();
+        this.specialty = doctorDTO.getSpecialty();
+        this.adress = new Adress(doctorDTO.getAdress());
+    }
 
     @Override
     public String toString() {

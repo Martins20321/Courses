@@ -14,11 +14,9 @@ public class PatientDTO implements Serializable {
     private String phone;
     private String cpf;
 
-    public Adress adress;
     public PatientDTO(){
 
     }
-
     public PatientDTO(String name, String email, String phone, String cpf, Adress adress) {
         this.name = name;
         this.email = email;
@@ -26,6 +24,8 @@ public class PatientDTO implements Serializable {
         this.cpf = cpf;
         this.adress = adress;
     }
+
+    public Adress adress;
 
     public String getName() {
         return name;

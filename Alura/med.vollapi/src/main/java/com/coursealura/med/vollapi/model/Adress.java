@@ -20,6 +20,16 @@ public class Adress implements Serializable {
     private String state;
     private String postalCode;
 
+    public Adress(Adress adress) {
+        this.streetAdress = streetAdress;
+        this.number = number;
+        this.additionalInformation = additionalInformation;
+        this.neighborhood = neighborhood;
+        this.city = city;
+        this.state = state;
+        this.postalCode = postalCode;
+    }
+
     @Override
     public String toString() {
         return "Adress{" +
