@@ -1,5 +1,6 @@
 package com.coursealura.med.vollapi.model;
 
+import com.coursealura.med.vollapi.model.dtos.PatientDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,6 +25,14 @@ public class Patient implements Serializable {
 
     @Embedded
     public Adress adress;
+
+    public Patient(PatientDTO patientDTO) {
+        this.name = patientDTO.getName();
+        this.email = patientDTO.getEmail();
+        this.phone = patientDTO.getPhone();
+        this.cpf = patientDTO.getCpf();
+        this.adress = new Adress(patientDTO.getAdress());
+    }
 
     @Override
     public String toString() {
