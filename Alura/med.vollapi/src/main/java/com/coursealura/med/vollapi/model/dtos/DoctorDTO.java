@@ -20,7 +20,8 @@ public class DoctorDTO implements Serializable {
     @NotBlank
     @Pattern(regexp = "\\d{4,6}")
     private String crm;
-
+    @NotBlank
+    private String phone;
     @NotNull
     private Specialty specialty;
     @NotNull
@@ -31,10 +32,11 @@ public class DoctorDTO implements Serializable {
 
     }
 
-    public DoctorDTO(String name, String email, String crm, Specialty specialty, Adress adress) {
+    public DoctorDTO(String name, String email, String crm, String phone, Specialty specialty, Adress adress) {
         this.name = name;
         this.email = email;
         this.crm = crm;
+        this.phone = phone;
         this.specialty = specialty;
         this.adress = adress;
     }
@@ -61,6 +63,14 @@ public class DoctorDTO implements Serializable {
 
     public void setCrm(String crm) {
         this.crm = crm;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public Specialty getSpecialty() {

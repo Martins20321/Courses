@@ -24,7 +24,7 @@ public class Doctor implements Serializable {
     private String name;
     private String email;
     private String crm;
-
+    private String phone;
     @Enumerated
     private Specialty specialty;
 
@@ -35,6 +35,7 @@ public class Doctor implements Serializable {
         this.name = doctorDTO.getName();
         this.email = doctorDTO.getEmail();
         this.crm = doctorDTO.getCrm();
+        this.phone = doctorDTO.getPhone();
         this.specialty = doctorDTO.getSpecialty();
         this.adress = new Adress(doctorDTO.getAdress());
     }
