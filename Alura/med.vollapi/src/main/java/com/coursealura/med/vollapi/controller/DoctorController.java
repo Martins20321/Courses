@@ -6,6 +6,8 @@ import com.coursealura.med.vollapi.model.dtos.DoctorListing;
 import com.coursealura.med.vollapi.model.repositories.DoctorRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +27,7 @@ public class DoctorController {
     }
 
     @GetMapping
-    public List<DoctorListing> findAll(){
-        return repository.findAll().stream().map(DoctorListing::new).toList();
+    public Page<DoctorListing> findAll(Pageable pageable){
+        return repository.findAll(pageable).map(DoctorListing::new);
     }
 }
