@@ -5,6 +5,8 @@ import com.coursealura.med.vollapi.model.dtos.PatientDTO;
 import com.coursealura.med.vollapi.model.repositories.PatientRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +26,7 @@ public class PatientController {
     }
 
     @GetMapping
-    public List<PatientListing> findAll(){
-        return repository.findAll().stream().map(PatientListing::new).toList();
+    public Page<PatientListing> findAll(Pageable pageable){
+        return repository.findAll(pageable).map(PatientListing::new);
     }
 }
