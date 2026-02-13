@@ -25,7 +25,7 @@ public class Doctor implements Serializable {
     private String email;
     private String crm;
     private String phone;
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private Specialty specialty;
 
     @Embedded
