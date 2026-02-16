@@ -28,12 +28,15 @@ public class Patient implements Serializable {
     @Embedded
     public Adress adress;
 
+    private Boolean active;
+
     public Patient(PatientDTO patientDTO) {
         this.name = patientDTO.getName();
         this.email = patientDTO.getEmail();
         this.phone = patientDTO.getPhone();
         this.cpf = patientDTO.getCpf();
         this.adress = new Adress(patientDTO.getAdress());
+        this.active = true;
     }
 
     @Override
@@ -57,5 +60,9 @@ public class Patient implements Serializable {
         if(patientUpdateData.adress() != null){
             this.adress.updateInformation(patientUpdateData.adress());
         }
+    }
+
+    public void delete() {
+        this.active = false;
     }
 }
