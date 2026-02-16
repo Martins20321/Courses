@@ -3,6 +3,7 @@ package com.coursealura.med.vollapi.controller;
 import com.coursealura.med.vollapi.model.Patient;
 import com.coursealura.med.vollapi.model.dtos.PatientDTO;
 import com.coursealura.med.vollapi.model.dtos.PatientListing;
+import com.coursealura.med.vollapi.model.dtos.PatientUpdateData;
 import com.coursealura.med.vollapi.model.repositories.PatientRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,5 +29,12 @@ public class PatientController {
     @GetMapping
     public Page<PatientListing> findAll(@PageableDefault(size = 10, sort = {"name"}) Pageable pageable){
         return repository.findAll(pageable).map(PatientListing::new);
+    }
+
+    @PutMapping
+    @Transactional
+    public void update(@RequestBody @Valid PatientUpdateData patientUpdateData){
+        var patient = repository.getReferenceById(patientUpdateData.id());
+        patient.updateInformattion(patientUpdateData);
     }
 }

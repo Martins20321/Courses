@@ -1,7 +1,9 @@
 package com.coursealura.med.vollapi.model;
 
 import com.coursealura.med.vollapi.model.dtos.PatientDTO;
+import com.coursealura.med.vollapi.model.dtos.PatientUpdateData;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import lombok.*;
 
 import java.io.Serializable;
@@ -43,5 +45,17 @@ public class Patient implements Serializable {
                 ", cpf='" + cpf + '\'' +
                 ", adress=" + adress +
                 '}';
+    }
+
+    public void updateInformattion(@Valid PatientUpdateData patientUpdateData) {
+        if(patientUpdateData.name() != null){
+            this.name = patientUpdateData.name();
+        }
+        if(patientUpdateData.phone() != null){
+            this.phone = patientUpdateData.phone();
+        }
+        if(patientUpdateData.adress() != null){
+            this.adress.updateInformation(patientUpdateData.adress());
+        }
     }
 }
