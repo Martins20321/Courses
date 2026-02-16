@@ -1,4 +1,4 @@
-package com.coursealura.med.vollapi.controller;
+package com.coursealura.med.vollapi.model.dtos;
 
 import com.coursealura.med.vollapi.model.Patient;
 

@@ -1,6 +1,7 @@
 package com.coursealura.med.vollapi.model;
 
 import com.coursealura.med.vollapi.model.dtos.DoctorDTO;
+import com.coursealura.med.vollapi.model.dtos.DoctorUpdateData;
 import com.coursealura.med.vollapi.model.enums.Specialty;
 import jakarta.persistence.*;
 import lombok.*;
@@ -50,5 +51,17 @@ public class Doctor implements Serializable {
                 ", specialty=" + specialty +
                 ", adress=" + adress +
                 '}';
+    }
+
+    public void updateInformation(DoctorUpdateData doctorUpdateData){
+        if(doctorUpdateData.name() != null){
+            this.name = doctorUpdateData.name();
+        }
+        if(doctorUpdateData.phone() != null){
+            this.phone = doctorUpdateData.phone();
+        }
+        if(doctorUpdateData.adress() != null){
+            this.adress.updateInformation(doctorUpdateData.adress());
+        }
     }
 }

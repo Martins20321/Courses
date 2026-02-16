@@ -53,4 +53,18 @@
                     ", postalCode='" + postalCode + '\'' +
                     '}';
         }
+
+        public void updateInformation(Adress updateadress) {
+            if(streetAdress != null){
+                this.streetAdress = updateadress.streetAdress;
+            } if(neighborhood != null){
+                this.neighborhood = updateadress.neighborhood;
+            } if(city != null){
+                this.city = updateadress.city;
+            } if(state != null){
+                this.state = updateadress.state;
+            } if(streetAdress != null){
+                this.postalCode = updateadress.postalCode;
+            }
+        }
     }
