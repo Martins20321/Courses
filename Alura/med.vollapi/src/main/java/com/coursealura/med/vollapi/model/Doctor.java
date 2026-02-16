@@ -32,6 +32,8 @@ public class Doctor implements Serializable {
     @Embedded
     private Adress adress;
 
+    private Boolean active;
+
     public Doctor(DoctorDTO doctorDTO) {
         this.name = doctorDTO.getName();
         this.email = doctorDTO.getEmail();
@@ -39,6 +41,7 @@ public class Doctor implements Serializable {
         this.phone = doctorDTO.getPhone();
         this.specialty = doctorDTO.getSpecialty();
         this.adress = new Adress(doctorDTO.getAdress());
+        this.active = true;
     }
 
     @Override
@@ -63,5 +66,9 @@ public class Doctor implements Serializable {
         if(doctorUpdateData.adress() != null){
             this.adress.updateInformation(doctorUpdateData.adress());
         }
+    }
+
+    public void delete() {
+        this.active = false;
     }
 }
