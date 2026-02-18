@@ -9,6 +9,8 @@ public class Abrigo implements Serializable {
     private String telefone;
     private String email;
 
+    private Pet[] pets;
+
     public Abrigo(){
 
     }
@@ -49,6 +51,10 @@ public class Abrigo implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Pet[] getPets() {
+        return pets;
     }
 
     @Override
