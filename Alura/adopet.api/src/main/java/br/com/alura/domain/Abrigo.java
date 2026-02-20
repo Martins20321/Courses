@@ -59,10 +59,8 @@ public class Abrigo implements Serializable {
 
     @Override
     public String toString() {
-        return "Abrigo{" +
-                "nome='" + nome + '\'' +
-                ", telefone='" + telefone + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+        return """
+                "id":%s,"nome":"%s","telefone":"%s","email":"%s"
+                """.formatted(this.id, this.nome, this.telefone, this.email);
     }
 }
