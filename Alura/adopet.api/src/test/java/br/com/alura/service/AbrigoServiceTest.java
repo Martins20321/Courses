@@ -45,4 +45,23 @@ public class AbrigoServiceTest {
         Assertions.assertEquals(expectedAbrigosCadastrados, actualAbrigosCadastrados);
         Assertions.assertEquals(expectedIdENome, actualIdENome);
     }
+
+    public void verficacaoDeAbrigosVazios() throws IOException, InterruptedException{
+       abrigo.setId(0L);
+       String expectedAbrigosVazios = "Não há abrigos cadastrados";
+
+       ByteArrayOutputStream baos = new ByteArrayOutputStream();
+       PrintStream printStream = new PrintStream(baos);
+       System.setOut(printStream);
+
+       when(response.body()).thenReturn("[]"); //retorno vazio
+        when(client.dispararRequisicaoGet(anyString())).thenReturn(response);
+
+       abrigoService.listarAbrigo();
+
+       String[] lines = baos.toString().split(System.lineSeparator());
+       String actualAbrigosVazios = lines[0];
+
+       Assertions.assertEquals(expectedAbrigosVazios, actualAbrigosVazios);
+    }
 }
