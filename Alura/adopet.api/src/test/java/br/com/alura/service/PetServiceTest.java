@@ -1,7 +1,6 @@
 package br.com.alura.service;
 
 import br.com.alura.client.ClientHttpConfiguration;
-import br.com.alura.domain.Pet;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -17,19 +16,19 @@ public class PetServiceTest {
     private ClientHttpConfiguration client = mock(ClientHttpConfiguration.class);
     PetService petService = new PetService(client);
     HttpResponse<String> response = mock(HttpResponse.class);
-    Pet pet = new Pet();
 
     @Test
     public void verificacaoDoImportarPetsAbrigo() throws IOException, InterruptedException {
-        String userInput = String.format("Teste%spets.csv",
-                System.lineSeparator());
-        ByteArrayInputStream bais = new ByteArrayInputStream(userInput.getBytes());
-        System.setIn(bais);
+       String userInput = String.format("Teste%spets.csv",
+               System.lineSeparator());
 
-        when(client.dispararRequisicaoPost(anyString(), any())).thenReturn(response);
+       ByteArrayInputStream bais = new ByteArrayInputStream(userInput.getBytes());
+       System.setIn(bais);
 
-        petService.importarPetsAbrigo();
-        verify(client.dispararRequisicaoPost(anyString(), anyString()), atLeast(1));
+       when(client.dispararRequisicaoPost(anyString(), any())).thenReturn(response);
 
+       petService.importarPetsAbrigo();
+       verify(client, atLeast(1))
+               .dispararRequisicaoPost(anyString(), any());
     }
 }

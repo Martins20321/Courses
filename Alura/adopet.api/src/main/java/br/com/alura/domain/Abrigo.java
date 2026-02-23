@@ -57,6 +57,7 @@ public class Abrigo implements Serializable {
         return pets;
     }
 
+    //Formatação para json
     @Override
     public String toString() {
         return """

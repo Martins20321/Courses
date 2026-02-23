@@ -27,9 +27,8 @@ public class AbrigoServiceTest {
         String expectedAbrigosCadastrados = "Abrigos cadastrados:";
         String expectedIdENome = "0 - Teste";
 
-        //Pega todos os retornos da tela;
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        PrintStream printStream = new PrintStream(baos);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(); //Criando o buffer em memória que armazenda bytes
+        PrintStream printStream = new PrintStream(baos);//Escrevendo no buffer criado
         System.setOut(printStream);
 
         when(response.body()).thenReturn("[{"+abrigo.toString()+"}]");
@@ -46,22 +45,21 @@ public class AbrigoServiceTest {
         Assertions.assertEquals(expectedIdENome, actualIdENome);
     }
 
-    public void verficacaoDeAbrigosVazios() throws IOException, InterruptedException{
-       abrigo.setId(0L);
-       String expectedAbrigosVazios = "Não há abrigos cadastrados";
+    @Test
+   public void verificarAbrigosVazios()throws IOException, InterruptedException{
+        abrigo.setId(0L);
+        String expectedAbrigosVazio = "";
 
-       ByteArrayOutputStream baos = new ByteArrayOutputStream();
-       PrintStream printStream = new PrintStream(baos);
-       System.setOut(printStream);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(baos);
+        System.setOut(printStream);
 
-       when(response.body()).thenReturn("[]"); //retorno vazio
+        when(response.body()).thenReturn("[]");
         when(client.dispararRequisicaoGet(anyString())).thenReturn(response);
 
-       abrigoService.listarAbrigo();
+        String[] lines = baos.toString().split(System.lineSeparator());
+        String actualAbrigosVazios = lines[0];
 
-       String[] lines = baos.toString().split(System.lineSeparator());
-       String actualAbrigosVazios = lines[0];
-
-       Assertions.assertEquals(expectedAbrigosVazios, actualAbrigosVazios);
-    }
+        Assertions.assertEquals(expectedAbrigosVazio, actualAbrigosVazios);
+   }
 }
