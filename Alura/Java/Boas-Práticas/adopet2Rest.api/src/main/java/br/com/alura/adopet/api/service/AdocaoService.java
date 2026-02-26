@@ -1,10 +1,12 @@
 package br.com.alura.adopet.api.service;
 
+import br.com.alura.adopet.api.dto.AprovacaoAbrigoDTO;
+import br.com.alura.adopet.api.dto.ReprovacaoAbrigoDTO;
+import br.com.alura.adopet.api.dto.SolicitacaoAdocaoDTO;
 import br.com.alura.adopet.api.model.Adocao;
 import br.com.alura.adopet.api.model.StatusAdocao;
 import br.com.alura.adopet.api.repository.AdocaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,7 +22,7 @@ public class AdocaoService {
     @Autowired
     private EmailService emailService;
 
-    public void solicitar(Adocao adocao) {
+    public void solicitar(SolicitacaoAdocaoDTO adocaoDto) {
         if (adocao.getPet().getAdotado() == true) {
             throw new ValidacaoException("Pet já foi adotado!");
         } else {
@@ -52,11 +54,12 @@ public class AdocaoService {
         String to = adocao.getPet().getAbrigo().getEmail();
         String subject = "Solicitação de Ajuda";
         String message = "Olá " +adocao.getPet().getAbrigo().getNome() +"!\n\nUma solicitação de adoção foi registrada hoje para o pet: " +adocao.getPet().getNome() +". \nFavor avaliar para aprovação ou reprovação.";
+
         emailService.enviarEmail(to, subject, message);
 
     }
 
-    public void aprovar(Adocao adocao) {
+    public void aprovar(AprovacaoAbrigoDTO adocaoDto) {
         adocao.setStatus(StatusAdocao.APROVADO);
         repository.save(adocao);
 
@@ -67,7 +70,7 @@ public class AdocaoService {
         emailService.enviarEmail(to, subject, message);
     }
 
-    public void reprovar(Adocao adocao) {
+    public void reprovar(ReprovacaoAbrigoDTO adocaoDto) {
         adocao.setStatus(StatusAdocao.REPROVADO);
         repository.save(adocao);
 
