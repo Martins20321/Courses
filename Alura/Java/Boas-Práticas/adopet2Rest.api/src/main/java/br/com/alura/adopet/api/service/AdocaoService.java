@@ -10,6 +10,7 @@ import br.com.alura.adopet.api.model.Tutor;
 import br.com.alura.adopet.api.repository.AdocaoRepository;
 import br.com.alura.adopet.api.repository.PetRepository;
 import br.com.alura.adopet.api.repository.TutorRepository;
+import br.com.alura.adopet.api.validacoes.ValidacaoSolicitacaoAdocao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,11 +33,15 @@ public class AdocaoService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private List<ValidacaoSolicitacaoAdocao> validacoes;
+
     public void solicitar(SolicitacaoAdocaoDTO adocaoDto) {
         Pet pet = petRepository.getReferenceById(adocaoDto.idPet());
         Tutor tutor = tutorRepository.getReferenceById(adocaoDto.idTutor());
 
         //Chamando as validações
+        validacoes.forEach( v -> v.validar(adocaoDto));
 
         Adocao adocao = new Adocao();
         adocao.setData(LocalDateTime.now());
@@ -49,7 +54,7 @@ public class AdocaoService {
 
         String to = adocao.getPet().getAbrigo().getEmail();
         String subject = "Solicitação de Ajuda";
-        String message = "Olá " +adocao.getPet().getAbrigo().getNome() +"!\n\nUma solicitação de adoção foi registrada hoje para o pet: " +adocao.getPet().getNome() +". \nFavor avaliar para aprovação ou reprovação.";
+        String message = "Olá " + adocao.getPet().getAbrigo().getNome() + "!\n\nUma solicitação de adoção foi registrada hoje para o pet: " + adocao.getPet().getNome() + ". \nFavor avaliar para aprovação ou reprovação.";
 
         emailService.enviarEmail(to, subject, message);
 
