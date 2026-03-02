@@ -15,10 +15,10 @@ public class Adocao {
 
     private LocalDateTime data;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY) //Na consulta, não carregará junto os relacionamentos
     private Tutor tutor;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private Pet pet;
 
     private String motivo;
