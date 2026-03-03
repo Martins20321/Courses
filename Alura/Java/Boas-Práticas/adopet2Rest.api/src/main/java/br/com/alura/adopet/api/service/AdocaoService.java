@@ -43,13 +43,7 @@ public class AdocaoService {
         //Chamando as validações
         validacoes.forEach( v -> v.validar(adocaoDto));
 
-        Adocao adocao = new Adocao();
-        adocao.setData(LocalDateTime.now());
-        adocao.setStatus(StatusAdocao.AGUARDANDO_AVALIACAO);
-        adocao.setPet(pet);
-        adocao.setTutor(tutor);
-        adocao.setMotivo(adocaoDto.motivo());
-
+        Adocao adocao = new Adocao(tutor, pet, adocaoDto.motivo());
         repository.save(adocao);
 
         String to = adocao.getPet().getAbrigo().getEmail();

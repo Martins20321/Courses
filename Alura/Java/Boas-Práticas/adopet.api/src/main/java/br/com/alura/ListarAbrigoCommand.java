@@ -7,7 +7,6 @@ import java.io.IOException;
 
 public class ListarAbrigoCommand implements Command {
 
-
     @Override
     public void execute() {
         try {

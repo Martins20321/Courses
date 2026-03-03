@@ -28,6 +28,18 @@ public class Adocao {
 
     private String justificativaStatus;
 
+    public Adocao() {
+
+    }
+
+    public Adocao(Tutor tutor, Pet pet, String motivo){
+        this.tutor = tutor;
+        this.pet = pet;
+        this.motivo = motivo;
+        this.status = StatusAdocao.AGUARDANDO_AVALIACAO;
+        this.data = LocalDateTime.now();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
