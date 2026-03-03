@@ -14,7 +14,6 @@ import br.com.alura.adopet.api.validacoes.ValidacaoSolicitacaoAdocao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -41,7 +40,7 @@ public class AdocaoService {
         Tutor tutor = tutorRepository.getReferenceById(adocaoDto.idTutor());
 
         //Chamando as validações
-        validacoes.forEach( v -> v.validar(adocaoDto));
+        validacoes.forEach(v -> v.validar(adocaoDto));
 
         Adocao adocao = new Adocao(tutor, pet, adocaoDto.motivo());
         repository.save(adocao);
