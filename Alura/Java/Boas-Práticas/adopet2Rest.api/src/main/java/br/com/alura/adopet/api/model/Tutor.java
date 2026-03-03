@@ -1,10 +1,8 @@
 package br.com.alura.adopet.api.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import br.com.alura.adopet.api.dto.AtualizarTutorDTO;
+import br.com.alura.adopet.api.dto.CadastrarTutorDTO;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 
 import java.util.List;
 import java.util.Objects;
@@ -19,13 +17,18 @@ public class Tutor {
 
     private String nome;
 
-    @Pattern(regexp = "\\(?\\d{2}\\)?\\d?\\d{4}-?\\d{4}")
     private String telefone;
 
     private String email;
 
     @OneToMany(mappedBy = "tutor")
     private List<Adocao> adocoes;
+
+    public Tutor(CadastrarTutorDTO dto) {
+        this.nome = dto.nome();
+        this.telefone = dto.telefone();
+        this.email = dto.email();
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -78,5 +81,10 @@ public class Tutor {
 
     public void setAdocoes(List<Adocao> adocoes) {
         this.adocoes = adocoes;
+    }
+
+    public void atualizarInfo(AtualizarTutorDTO dto) {
+        setNome(dto.nome());
+        setTelefone(dto.telefone());
     }
 }
