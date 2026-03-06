@@ -1,9 +1,7 @@
 package br.com.alura.adopet.api.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import br.com.alura.adopet.api.dto.CadastrarPetDTO;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 import java.util.Objects;
 
@@ -13,45 +11,39 @@ public class Pet {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @NotNull
-    @Column(name = "tipo")
     private TipoPet tipo;
 
-    @NotBlank
-    @Column(name = "nome")
     private String nome;
 
-    @NotBlank
-    @Column(name = "raca")
     private String raca;
 
-    @NotNull
-    @Column(name = "idade")
     private Integer idade;
 
-    @NotBlank
-    @Column(name = "cor")
     private String cor;
 
-    @NotNull
-    @Column(name = "peso")
     private Float peso;
 
-    @Column(name = "adotado")
     private Boolean adotado;
 
-    @ManyToOne
-    @JsonBackReference("abrigo_pets")
-    @JoinColumn(name = "abrigo_id")
+    @ManyToOne(fetch = FetchType.LAZY)
     private Abrigo abrigo;
 
-    @OneToOne(mappedBy = "pet")
-    @JsonBackReference("adocao_pets")
+    @OneToOne(mappedBy = "pet", fetch = FetchType.LAZY)
     private Adocao adocao;
+
+    public Pet(CadastrarPetDTO cadastrarPetDTO, Abrigo abrigo){
+        this.tipo = cadastrarPetDTO.tipo();
+        this.nome = cadastrarPetDTO.nome();
+        this.raca = cadastrarPetDTO.raca();
+        this.idade = cadastrarPetDTO.idade();
+        this.cor = cadastrarPetDTO.cor();
+        this.peso = cadastrarPetDTO.peso();
+        this.abrigo = abrigo;
+        this.adotado = false;
+    }
 
     @Override
     public boolean equals(Object o) {
