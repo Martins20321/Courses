@@ -19,10 +19,26 @@ class CalculadoraProbabilidadeAdocaoTest {
         Pet pet = new Pet(new CadastroPetDto(TipoPet.GATO, "Bob", "Golden", 4, "Ouro", 4.0f), abrigo);
 
         CalculadoraProbabilidadeAdocao calc = new CalculadoraProbabilidadeAdocao();
-        
-        //Entrando no JUnit
+
+        //Entrando no JUnit (Classe padrão Java para realizar testes automatizados)
         ProbabilidadeAdocao probabilidadeActual = calc.calcular(pet);
         ProbabilidadeAdocao probabilidadeExpected = ProbabilidadeAdocao.ALTA;
+
+        Assertions.assertEquals(probabilidadeExpected, probabilidadeActual);
+    }
+
+    @Test
+    void cenario02(){
+        //idade 15 anos, peso 4 kilos = Probabilidade média
+
+        Abrigo abrigo = new Abrigo(new CadastroAbrigoDto("Abrigo Petz", "99999999991", "petz.abrigo@email.com"));
+        Pet pet = new Pet(new CadastroPetDto(TipoPet.GATO, "Bob", "Golden", 15, "Ouro", 4.0f), abrigo);
+
+        CalculadoraProbabilidadeAdocao calc = new CalculadoraProbabilidadeAdocao();
+
+        //Junit
+        ProbabilidadeAdocao probabilidadeActual = calc.calcular(pet);
+        ProbabilidadeAdocao probabilidadeExpected = ProbabilidadeAdocao.MEDIA;
 
         Assertions.assertEquals(probabilidadeExpected, probabilidadeActual);
     }
