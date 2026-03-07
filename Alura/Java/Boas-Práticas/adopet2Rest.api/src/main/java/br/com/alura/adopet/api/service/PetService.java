@@ -17,7 +17,7 @@ public class PetService {
     private PetRepository repository;
 
     public List<PetDTO> listarTodosPets() {
-        return repository.findAllByIdAdotadoFalse()
+        return repository.findAllByAdotadoFalse()
                 .stream()
                 .map(PetDTO::new)
                 .toList();

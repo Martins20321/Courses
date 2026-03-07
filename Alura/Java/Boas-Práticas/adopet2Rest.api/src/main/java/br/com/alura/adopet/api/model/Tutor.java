@@ -24,6 +24,10 @@ public class Tutor {
     @OneToMany(mappedBy = "tutor")
     private List<Adocao> adocoes;
 
+    public Tutor(){
+
+    }
+
     public Tutor(CadastrarTutorDTO dto) {
         this.nome = dto.nome();
         this.telefone = dto.telefone();

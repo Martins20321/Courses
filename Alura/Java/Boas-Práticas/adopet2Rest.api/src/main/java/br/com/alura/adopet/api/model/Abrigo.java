@@ -26,6 +26,10 @@ public class Abrigo {
     @OneToMany(mappedBy = "abrigo", cascade = CascadeType.ALL)
     private List<Pet> pets;
 
+    public Abrigo(){
+
+    }
+
     public Abrigo(CadastroAbrigoDTO dto) {
         this.nome = dto.nome();
         this.telefone = dto.telefone();

@@ -34,6 +34,10 @@ public class Pet {
     @OneToOne(mappedBy = "pet", fetch = FetchType.LAZY)
     private Adocao adocao;
 
+    public Pet(){
+
+    }
+
     public Pet(CadastrarPetDTO cadastrarPetDTO, Abrigo abrigo){
         this.tipo = cadastrarPetDTO.tipo();
         this.nome = cadastrarPetDTO.nome();

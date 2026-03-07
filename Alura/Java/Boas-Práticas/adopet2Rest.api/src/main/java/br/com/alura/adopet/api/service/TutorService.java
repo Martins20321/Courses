@@ -2,6 +2,7 @@ package br.com.alura.adopet.api.service;
 
 import br.com.alura.adopet.api.dto.AtualizarTutorDTO;
 import br.com.alura.adopet.api.dto.CadastrarTutorDTO;
+import br.com.alura.adopet.api.exception.ValidacaoException;
 import br.com.alura.adopet.api.model.Tutor;
 import br.com.alura.adopet.api.repository.TutorRepository;
 import org.springframework.beans.factory.annotation.Autowired;

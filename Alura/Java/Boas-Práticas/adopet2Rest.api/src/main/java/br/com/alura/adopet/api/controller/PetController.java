@@ -3,7 +3,7 @@ package br.com.alura.adopet.api.controller;
 import br.com.alura.adopet.api.dto.PetDTO;
 import br.com.alura.adopet.api.repository.PetRepository;
 import br.com.alura.adopet.api.service.PetService;
-import br.com.alura.adopet.api.service.ValidacaoException;
+import br.com.alura.adopet.api.exception.ValidacaoException;
 import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

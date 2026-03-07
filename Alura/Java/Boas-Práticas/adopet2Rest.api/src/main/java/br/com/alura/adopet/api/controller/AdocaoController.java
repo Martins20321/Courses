@@ -4,7 +4,7 @@ import br.com.alura.adopet.api.dto.AprovacaoAbrigoDTO;
 import br.com.alura.adopet.api.dto.ReprovacaoAbrigoDTO;
 import br.com.alura.adopet.api.dto.SolicitacaoAdocaoDTO;
 import br.com.alura.adopet.api.service.AdocaoService;
-import br.com.alura.adopet.api.service.ValidacaoException;
+import br.com.alura.adopet.api.exception.ValidacaoException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

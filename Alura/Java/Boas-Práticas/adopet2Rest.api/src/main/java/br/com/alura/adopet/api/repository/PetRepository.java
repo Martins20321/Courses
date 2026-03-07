@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface PetRepository extends JpaRepository<Pet, Long> {
 
-    List<Pet> findAllByIdAdotadoFalse();
+    List<Pet> findAllByAdotadoFalse();
 
     List<Pet> findByAbrigo(Abrigo abrigo);
 }
