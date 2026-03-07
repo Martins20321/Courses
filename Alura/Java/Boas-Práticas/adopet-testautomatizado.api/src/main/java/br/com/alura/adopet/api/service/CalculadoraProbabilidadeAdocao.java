@@ -38,8 +38,8 @@ public class CalculadoraProbabilidadeAdocao {
         // penalizando pela idade avançada
         if (idade >= 15) {
             nota -= 5;
-        }
-        if (idade >= 10) {
+        } //Corrigindo erro de entrar nos dois ifs
+        else if (idade >= 10) {
             nota -= 4;
         }
 
