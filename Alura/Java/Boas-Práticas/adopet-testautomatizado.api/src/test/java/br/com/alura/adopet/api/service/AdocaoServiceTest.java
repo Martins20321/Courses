@@ -16,9 +16,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,8 +37,14 @@ class AdocaoServiceTest {
     private AdocaoRepository adocaoRepository;
     @Mock
     private EmailService emailService;
+
+    @Spy //Controle de comportamento do objeto
+    private List<ValidacaoSolicitacaoAdocao> validadores = new ArrayList<>();
     @Mock
-    private List<ValidacaoSolicitacaoAdocao> validacoes;
+    private ValidacaoSolicitacaoAdocao validador1;
+    @Mock
+    private ValidacaoSolicitacaoAdocao validador2;
+
     @Mock
     private Pet pet;
     @Mock
@@ -55,9 +63,9 @@ class AdocaoServiceTest {
 
         //ARRANGE
         this.dto = new SolicitacaoAdocaoDto(10l, 13l, "Motivo de exemplo");
-        BDDMockito.given(petRepository.getReferenceById(dto.idPet())).willReturn(pet);
-        BDDMockito.given(tutorRepository.getReferenceById(dto.idTutor())).willReturn(tutor);
-        BDDMockito.given(pet.getAbrigo()).willReturn(abrigo);
+        given(petRepository.getReferenceById(dto.idPet())).willReturn(pet);
+        given(tutorRepository.getReferenceById(dto.idTutor())).willReturn(tutor);
+        given(pet.getAbrigo()).willReturn(abrigo);
 
         //ACT
         service.solicitar(dto);
@@ -70,5 +78,25 @@ class AdocaoServiceTest {
         Assertions.assertEquals(pet, adocaoSalva.getPet());
         Assertions.assertEquals(tutor, adocaoSalva.getTutor());
         Assertions.assertEquals(dto.motivo(), adocaoSalva.getMotivo());
+    }
+
+    @Test
+    @DisplayName("Deve verificar a chamada de validadores ao chamar o método de solicitar")
+    void verificacaoChamadaValidadoresAdocaoSolicitar(){
+
+        //ARRANGE
+        this.dto = new SolicitacaoAdocaoDto(pet.getId(), tutor.getId(), "Motivo Qualquer");
+        given(petRepository.getReferenceById(dto.idPet())).willReturn(pet);
+        given(tutorRepository.getReferenceById(dto.idTutor())).willReturn(tutor);
+        given(pet.getAbrigo()).willReturn(abrigo);
+
+        validadores.addAll(Arrays.asList(validador1, validador2));
+
+        //ACT
+        service.solicitar(dto);
+
+        //ASSERTS
+        then(validador1).should().validar(dto);
+        then(validador2).should().validar(dto);
     }
 }
