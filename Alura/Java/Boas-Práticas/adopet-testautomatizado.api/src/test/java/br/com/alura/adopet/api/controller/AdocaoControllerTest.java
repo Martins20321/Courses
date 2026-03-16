@@ -1,5 +1,7 @@
 package br.com.alura.adopet.api.controller;
 
+import br.com.alura.adopet.api.dto.AprovacaoAdocaoDto;
+import br.com.alura.adopet.api.dto.ReprovacaoAdocaoDto;
 import br.com.alura.adopet.api.dto.SolicitacaoAdocaoDto;
 import br.com.alura.adopet.api.service.AdocaoService;
 import org.junit.jupiter.api.Assertions;
@@ -16,6 +18,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -29,6 +32,12 @@ class AdocaoControllerTest {
 
     @Autowired
     private JacksonTester<SolicitacaoAdocaoDto> dtoJackson;
+
+    @Autowired
+    private JacksonTester<AprovacaoAdocaoDto> aproDTOJackson;
+
+    @Autowired
+    private JacksonTester<ReprovacaoAdocaoDto> reproDTOJackson;
 
     @Test
     @DisplayName("Deve retornar código 400 ao solicitar adoção com erro")
@@ -66,5 +75,41 @@ class AdocaoControllerTest {
         //ASSERTIVE
         Assertions.assertEquals(200, response.getStatus());
         Assertions.assertEquals("Adoção solciitada com sucesso!", response.getContentAsString());
+    }
+
+    @Test
+    @DisplayName("Deve retornar código 200 ao fazer aprovação da solicitação")
+    void verificacaoDeSucessoAprovacao() throws Exception{
+
+        //ARRANGE
+        AprovacaoAdocaoDto dto = new AprovacaoAdocaoDto(10l);
+
+        //ACT
+        var response = mockMvc.perform(
+                put("/adocoes/aprovar")
+                        .content(aproDTOJackson.write(dto).getJson())
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().getResponse();
+
+        //ASSERTIVE
+        Assertions.assertEquals(200, response.getStatus());
+    }
+
+    @Test
+    @DisplayName("Deve retornar código 200 ao reprovar uma solicitação")
+    void verificaoDeSucessoReprovacao()throws Exception{
+
+        //ARRANGE
+        ReprovacaoAdocaoDto dto = new ReprovacaoAdocaoDto(20l, "Justificativa plausível");
+
+        //ACT
+        var response = mockMvc.perform(
+                put("/adocoes/reprovar")
+                        .content(reproDTOJackson.write(dto).getJson())
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().getResponse();
+        
+        //ASSERTIVE
+        Assertions.assertEquals(200, response.getStatus());
     }
 }
