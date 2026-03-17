@@ -1,5 +1,6 @@
 package br.com.alura.adopet.api.controller;
 
+import br.com.alura.adopet.api.dto.AtualizacaoTutorDto;
 import br.com.alura.adopet.api.dto.CadastroTutorDto;
 import br.com.alura.adopet.api.service.TutorService;
 import org.junit.jupiter.api.Assertions;
@@ -15,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -29,6 +31,9 @@ class TutorControllerTest {
 
     @Autowired
     private JacksonTester<CadastroTutorDto> cadastroDTOJackson;
+
+    @Autowired
+    private JacksonTester<AtualizacaoTutorDto> atuDTOJackson;
 
     @Test
     @DisplayName("Deve retornar código 200 ao fazer o método cadastrar de tutor")
@@ -66,5 +71,39 @@ class TutorControllerTest {
         Assertions.assertEquals(400, response.getStatus());
     }
 
-    
+    @Test
+    @DisplayName("Deve retornar código 200 ao fazer atualização do tutor")
+    void verificacaoDeSucessoAoAtualizarTutor() throws Exception{
+
+        //ARRANGE
+        AtualizacaoTutorDto dto = new AtualizacaoTutorDto(2l, "João Pedro", "(61)91234-6789", "joao@email.com");
+
+        //ACT
+        var response = mockMvc.perform(
+                put("/tutores")
+                        .content(atuDTOJackson.write(dto).getJson())
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().getResponse();
+
+        //ASSERTIVE
+        Assertions.assertEquals(200, response.getStatus());
+    }
+
+    @Test
+    @DisplayName("Deve retornar código 400 ao realizar atualização errada do tutor. Ex: Informações Insuficientes")
+    void verificacaoDeErroAoAtualizarTutor() throws Exception{
+
+        //ARRANGE
+        AtualizacaoTutorDto dto = new AtualizacaoTutorDto(null, null, "(61)91234-6789", "joao@email.com");
+
+        //ACT
+        var response = mockMvc.perform(
+                put("/tutores")
+                        .content(atuDTOJackson.write(dto).getJson())
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().getResponse();
+
+        //ASSERTIVE
+        Assertions.assertEquals(400, response.getStatus());
+    }
 }
