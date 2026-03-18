@@ -74,7 +74,7 @@ class AdocaoControllerTest {
 
         //ASSERTIVE
         Assertions.assertEquals(200, response.getStatus());
-        Assertions.assertEquals("Adoção solciitada com sucesso!", response.getContentAsString());
+        Assertions.assertEquals("Adoção solicitada com sucesso!", response.getContentAsString());
     }
 
     @Test
