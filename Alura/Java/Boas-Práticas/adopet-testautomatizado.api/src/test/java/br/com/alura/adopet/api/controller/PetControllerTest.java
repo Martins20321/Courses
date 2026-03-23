@@ -32,7 +32,7 @@ class PetControllerTest {
                 get("/pets")
                         .contentType(MediaType.APPLICATION_JSON)
         ).andReturn().getResponse();
-        
+
         //ASSERTIVE
         Assertions.assertEquals(200, response.getStatus());
     }
