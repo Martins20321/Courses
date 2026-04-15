@@ -63,6 +63,10 @@ public class Adocao {
         return tutor;
     }
 
+    public void setTutor(Tutor tutor) {
+        this.tutor = tutor;
+    }
+
     public Pet getPet() {
         return pet;
     }
@@ -77,6 +81,10 @@ public class Adocao {
 
     public StatusAdocao getStatus() {
         return status;
+    }
+
+    public void setStatus(StatusAdocao status) {
+        this.status = status;
     }
 
     public String getJustificativaStatus() {
