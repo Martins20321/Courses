@@ -7,8 +7,8 @@ import med.voll.api.dto.DadosAtualizacaoMedicoDTO;
 import med.voll.api.dto.DadosCadastroMedicoDTO;
 import med.voll.api.dto.DadosDetalhamentoMedicoDTO;
 import med.voll.api.dto.DadosListagemMedicoDTO;
+import med.voll.api.infra.exception.ResourceNotFoundException;
 import med.voll.api.repository.MedicoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -44,14 +44,14 @@ public class MedicoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<DadosDetalhamentoMedicoDTO> listarPorId(@PathVariable Long id){
-        Medico medico = repository.getReferenceById(id);
+        Medico medico = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
         return ResponseEntity.ok().body(new DadosDetalhamentoMedicoDTO(medico));
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<DadosDetalhamentoMedicoDTO> atualizar(@RequestBody @Valid DadosAtualizacaoMedicoDTO dadosDTO) {
-        Medico medico = repository.getReferenceById(dadosDTO.id());
+    public ResponseEntity<DadosDetalhamentoMedicoDTO> atualizar(@RequestBody @Valid DadosAtualizacaoMedicoDTO dadosDTO, @PathVariable Long id) {
+        Medico medico = repository.findById(dadosDTO.id()).orElseThrow(() -> new ResourceNotFoundException(id));
         medico.atualizarInformacoes(dadosDTO);
 
         return ResponseEntity.ok().body(new DadosDetalhamentoMedicoDTO(medico));
@@ -60,7 +60,7 @@ public class MedicoController {
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
-        repository.getReferenceById(id);
+        repository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
         return ResponseEntity.noContent().build();
     }
 }
