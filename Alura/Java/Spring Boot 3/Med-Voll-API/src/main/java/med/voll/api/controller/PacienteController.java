@@ -1,67 +1,63 @@
 package med.voll.api.controller;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import med.voll.api.domain.Paciente;
 import med.voll.api.dto.DadosAtualizacaoPacienteDTO;
 import med.voll.api.dto.DadosCadastroPacienteDTO;
 import med.voll.api.dto.DadosDetalhamentoPacienteDTO;
 import med.voll.api.dto.DadosListagemPacienteDTO;
 import med.voll.api.repository.PacienteRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
-@RequestMapping("pacientes")
+@RequestMapping("/pacientes")
+@RequiredArgsConstructor
 public class PacienteController {
 
-    @Autowired
-    private PacienteRepository repository;
+    private final PacienteRepository repository;
 
     @PostMapping
     @Transactional
-    public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroPacienteDTO dados, UriComponentsBuilder uriBuilder) {
-        var paciente = new Paciente(dados);
+    public ResponseEntity<DadosDetalhamentoPacienteDTO> cadastrar(@RequestBody @Valid DadosCadastroPacienteDTO dadosDTO) {
+        Paciente paciente = new Paciente(dadosDTO);
         repository.save(paciente);
-
-        var uri = uriBuilder.path("/pacientes/{id}").buildAndExpand(paciente.getId()).toUri();
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(paciente.getId()).toUri();
         return ResponseEntity.created(uri).body(new DadosDetalhamentoPacienteDTO(paciente));
     }
 
     @GetMapping
-    public ResponseEntity<Page<DadosListagemPacienteDTO>> listar(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao) {
-        var page = repository.findAllByAtivoTrue(paginacao).map(DadosListagemPacienteDTO::new);
-        return ResponseEntity.ok(page);
+    public ResponseEntity<Page<DadosListagemPacienteDTO>> listar(@PageableDefault(size = 10, sort = {"nome"}) Pageable pageable) {
+        var page = repository.findAllByAtivoTrue(pageable).map(DadosListagemPacienteDTO::new);
+        return ResponseEntity.ok().body(page);
     }
 
-    @PutMapping
-    @Transactional
-    public ResponseEntity atualizar(@RequestBody @Valid DadosAtualizacaoPacienteDTO dados) {
-        var paciente = repository.getReferenceById(dados.id());
-        paciente.atualizarInformacoes(dados);
+    @GetMapping("/{id}")
+    public ResponseEntity<DadosDetalhamentoPacienteDTO> listarPorId(@PathVariable Long id) {
+        Paciente paciente = repository.getReferenceById(id);
+        return ResponseEntity.ok().body(new DadosDetalhamentoPacienteDTO(paciente));
+    }
 
-        return ResponseEntity.ok(new DadosDetalhamentoPacienteDTO(paciente));
+    @PutMapping("/{id}")
+    @Transactional
+    public ResponseEntity<DadosDetalhamentoPacienteDTO> atualizar(@RequestBody @Valid DadosAtualizacaoPacienteDTO dadosDTO, @PathVariable Long id) {
+        Paciente paciente = repository.getReferenceById(id);
+        paciente.atualizarInformacoes(dadosDTO);
+        return ResponseEntity.ok().body(new DadosDetalhamentoPacienteDTO(paciente));
     }
 
     @DeleteMapping("/{id}")
     @Transactional
-    public ResponseEntity excluir(@PathVariable Long id) {
-        var paciente = repository.getReferenceById(id);
-        paciente.excluir();
-
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        repository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-
-    @GetMapping("/{id}")
-    public ResponseEntity detalhar(@PathVariable Long id) {
-        var paciente = repository.getReferenceById(id);
-        return ResponseEntity.ok(new DadosDetalhamentoPacienteDTO(paciente));
-    }
-
-
 }

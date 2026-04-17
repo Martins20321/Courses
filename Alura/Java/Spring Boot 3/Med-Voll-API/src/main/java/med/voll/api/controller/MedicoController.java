@@ -1,6 +1,7 @@
 package med.voll.api.controller;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import med.voll.api.domain.Medico;
 import med.voll.api.dto.DadosAtualizacaoMedicoDTO;
 import med.voll.api.dto.DadosCadastroMedicoDTO;
@@ -20,10 +21,10 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/medicos")
+@RequiredArgsConstructor
 public class MedicoController {
 
-    @Autowired
-    private MedicoRepository repository;
+    private final MedicoRepository repository;
 
     @PostMapping
     @Transactional
@@ -59,7 +60,7 @@ public class MedicoController {
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
-        var medico = repository.getReferenceById(id);
+        repository.getReferenceById(id);
         return ResponseEntity.noContent().build();
     }
 }
