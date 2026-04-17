@@ -7,13 +7,12 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import med.voll.api.domain.enums.Especialidade;
 
-public record DadosCadastroMedico(
+public record DadosCadastroMedicoDTO(
         @NotBlank
         String nome,
         @NotBlank
         @Email
         String email,
-
         @NotBlank
         String telefone,
         @NotBlank
@@ -22,5 +21,5 @@ public record DadosCadastroMedico(
         @NotNull
         Especialidade especialidade,
 
-        @NotNull @Valid DadosEndereco endereco) {
+        @NotNull @Valid DadosEnderecoDTO endereco) {
 }
