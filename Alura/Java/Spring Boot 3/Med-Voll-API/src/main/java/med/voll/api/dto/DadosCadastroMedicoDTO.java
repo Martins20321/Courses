@@ -11,12 +11,12 @@ public record DadosCadastroMedicoDTO(
         @NotBlank
         String nome,
         @NotBlank
-        @Email
+        @Email(message = "Formato do email é inválido")
         String email,
         @NotBlank
         String telefone,
         @NotBlank
-        @Pattern(regexp = "\\d{4,6}")
+        @Pattern(regexp = "\\d{4,6}", message = "Formato do CRM é inválido")
         String crm,
         @NotNull
         Especialidade especialidade,

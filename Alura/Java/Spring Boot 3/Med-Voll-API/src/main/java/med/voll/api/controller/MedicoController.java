@@ -60,7 +60,8 @@ public class MedicoController {
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
-        repository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
+        Medico medicoTemp = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
+        repository.delete(medicoTemp);
         return ResponseEntity.noContent().build();
     }
 }

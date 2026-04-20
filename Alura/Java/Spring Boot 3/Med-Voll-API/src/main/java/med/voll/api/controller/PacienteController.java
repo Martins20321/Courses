@@ -7,6 +7,7 @@ import med.voll.api.dto.DadosAtualizacaoPacienteDTO;
 import med.voll.api.dto.DadosCadastroPacienteDTO;
 import med.voll.api.dto.DadosDetalhamentoPacienteDTO;
 import med.voll.api.dto.DadosListagemPacienteDTO;
+import med.voll.api.infra.exception.ResourceNotFoundException;
 import med.voll.api.repository.PacienteRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,14 +43,14 @@ public class PacienteController {
 
     @GetMapping("/{id}")
     public ResponseEntity<DadosDetalhamentoPacienteDTO> listarPorId(@PathVariable Long id) {
-        Paciente paciente = repository.getReferenceById(id);
+        Paciente paciente = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
         return ResponseEntity.ok().body(new DadosDetalhamentoPacienteDTO(paciente));
     }
 
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity<DadosDetalhamentoPacienteDTO> atualizar(@RequestBody @Valid DadosAtualizacaoPacienteDTO dadosDTO, @PathVariable Long id) {
-        Paciente paciente = repository.getReferenceById(id);
+        Paciente paciente = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
         paciente.atualizarInformacoes(dadosDTO);
         return ResponseEntity.ok().body(new DadosDetalhamentoPacienteDTO(paciente));
     }
@@ -57,7 +58,8 @@ public class PacienteController {
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        repository.deleteById(id);
+        Paciente pacieteTemp = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
+        repository.delete(pacieteTemp);
         return ResponseEntity.noContent().build();
     }
 }
