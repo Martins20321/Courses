@@ -2,7 +2,9 @@ package med.voll.api.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import med.voll.api.domain.usuario.Usuario;
 import med.voll.api.dto.DadosAutenticacaoDTO;
+import med.voll.api.infra.security.TokenService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,11 +20,14 @@ public class AutenticacaoController {
 
     private final AuthenticationManager manager;
 
-    @PostMapping
-    public ResponseEntity<Void> efetuarLogin(@RequestBody @Valid DadosAutenticacaoDTO dadosDTO) {
-        var token = new UsernamePasswordAuthenticationToken(dadosDTO.login(), dadosDTO.senha());
-        var authentication = manager.authenticate(token);
+    private final TokenService tokenService;
 
-        return ResponseEntity.ok().build();
+    //Processo de autenticação
+    @PostMapping
+    public ResponseEntity<String> efetuarLogin(@RequestBody @Valid DadosAutenticacaoDTO dadosDTO) {
+        var token = new UsernamePasswordAuthenticationToken(dadosDTO.login(), dadosDTO.senha());
+        var authentication = manager.authenticate(token); //Realiza o processo de autenticação
+
+        return ResponseEntity.ok().body(tokenService.gerarToken((Usuario) authentication.getPrincipal()));
     }
 }

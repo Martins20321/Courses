@@ -29,6 +29,7 @@ public class SecurityConfigurations {
         return configuration.getAuthenticationManager();
     }
 
+    //Informando o tipo de Hashing da senha
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
