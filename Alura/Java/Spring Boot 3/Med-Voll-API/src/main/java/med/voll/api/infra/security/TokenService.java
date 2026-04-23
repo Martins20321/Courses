@@ -25,6 +25,7 @@ public class TokenService {
             return JWT.create()
                     .withIssuer("API voll med") //Quem gerou o token
                     .withSubject(usuario.getLogin())//Quem é o dono do token
+                    .withClaim("id", usuario.getId())//Incluindo Id do usuário no Token
                     .withExpiresAt(dataExpiracao())
                     .sign(algoritmo); //Assinatura
         } catch (JWTCreationException exception) {
