@@ -4,13 +4,17 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
 @Component
+@RequiredArgsConstructor
 public class SecurityFilter extends OncePerRequestFilter {
+
+    private final TokenService tokenService;
 
     //Garante que vai ser executada uma única vez antes de cada requisição
     @Override
@@ -19,7 +23,8 @@ public class SecurityFilter extends OncePerRequestFilter {
         //Recuperado o cabeçalho
         var tokenJWT = recuperarToken(request);
 
-        System.out.println(tokenJWT);
+        var subject = tokenService.getSubject(tokenJWT);
+
         //Continuar o fluxo da requisição
         filterChain.doFilter(request, response);
     }
