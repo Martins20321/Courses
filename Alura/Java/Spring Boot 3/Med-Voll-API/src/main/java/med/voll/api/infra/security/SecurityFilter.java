@@ -29,6 +29,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         //Validando o token
         if (tokenJWT != null) {
+            System.out.println("Filtro Chamado");
             var subject = tokenService.getSubject(tokenJWT);
 
             //Spring considerar que o usuário está logado
@@ -45,7 +46,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         var authorizationHeader = request.getHeader("Authorization");
 
         if (authorizationHeader != null) {
-            return authorizationHeader.replace("Bearer ", "");
+            return authorizationHeader.replace("Bearer ", "").trim();
         }
 
         return null;

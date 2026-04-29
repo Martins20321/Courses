@@ -9,8 +9,11 @@ import med.voll.api.domain.enums.Especialidade;
 import med.voll.api.dto.DadosAtualizacaoMedicoDTO;
 import med.voll.api.dto.DadosCadastroMedicoDTO;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Table(name = "medicos")
-@Entity(name = "Medico")
+@Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,6 +36,9 @@ public class Medico {
     private Endereco endereco;
 
     private Boolean ativo;
+
+    @OneToMany(mappedBy = "medico")
+    private List<Consulta> consultas = new ArrayList<>();
 
     public Medico(DadosCadastroMedicoDTO dados) {
         this.ativo = true;

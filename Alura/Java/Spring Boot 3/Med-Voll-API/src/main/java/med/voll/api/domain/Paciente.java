@@ -8,8 +8,11 @@ import lombok.NoArgsConstructor;
 import med.voll.api.dto.DadosAtualizacaoPacienteDTO;
 import med.voll.api.dto.DadosCadastroPacienteDTO;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Table(name = "pacientes")
-@Entity(name = "Paciente")
+@Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,6 +32,9 @@ public class Paciente {
     private Endereco endereco;
 
     private Boolean ativo;
+
+    @OneToMany(mappedBy = "paciente")
+    private List<Consulta> consultas = new ArrayList<>();
 
     public Paciente(DadosCadastroPacienteDTO dados) {
         this.ativo = true;
