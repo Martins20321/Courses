@@ -2,6 +2,7 @@ package med.voll.api.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import med.voll.api.dto.DadosAgendamentoConsultaDTO;
 
 import java.time.LocalDateTime;
 
@@ -28,4 +29,8 @@ public class Consulta {
     private Paciente paciente;
 
     private LocalDateTime data;
+
+    public Consulta(DadosAgendamentoConsultaDTO agendamentoConsultaDTO) {
+        this.data = agendamentoConsultaDTO.data();
+    }
 }

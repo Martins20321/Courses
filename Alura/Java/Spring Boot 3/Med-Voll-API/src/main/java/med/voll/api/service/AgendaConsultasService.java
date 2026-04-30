@@ -20,11 +20,28 @@ public class AgendaConsultasService {
     private final PacienteRepository pacienteRepository;
 
     public void agendar(DadosAgendamentoConsultaDTO agendamentoConsultaDTO) {
-        
-        Medico medico = medicoRepository.findById(agendamentoConsultaDTO.idMedico())
-                .orElseThrow(() -> new ResourceNotFoundException(agendamentoConsultaDTO.idMedico()));
+        Consulta consulta = new Consulta(agendamentoConsultaDTO);
+
+        Medico medico = escolherMedico(agendamentoConsultaDTO);
         Paciente paciente = pacienteRepository.findById(agendamentoConsultaDTO.idPaciente())
                 .orElseThrow(() -> new ResourceNotFoundException(agendamentoConsultaDTO.idPaciente()));
-        Consulta consulta = new Consulta(null, medico, paciente, agendamentoConsultaDTO.data());
+
+        consulta.setMedico(medico);
+        consulta.setPaciente(paciente);
+
+        consulta = repository.save(consulta);
+        return new ConsultaDTO(consulta);
+    }
+
+    private Medico escolherMedico(DadosAgendamentoConsultaDTO agendamentoConsultaDTO) {
+        if (agendamentoConsultaDTO.idMedico() != null) {
+            return medicoRepository.findById(agendamentoConsultaDTO.idMedico())
+                    .orElseThrow(() -> new ResourceNotFoundException(agendamentoConsultaDTO.idMedico()));
+        }
+        if (agendamentoConsultaDTO.especialidade() == null){
+            throw new RuntimeException("Especialidade é obrigatória quando o médico não for escolhido");
+        }
+
+        return medicoRepository.FindRandomly(agendamentoConsultaDTO.especialidade(), agendamentoConsultaDTO.data());
     }
 }
