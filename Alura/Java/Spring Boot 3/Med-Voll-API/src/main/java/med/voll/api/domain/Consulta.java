@@ -29,6 +29,7 @@ public class Consulta {
     private Paciente paciente;
 
     private LocalDateTime data;
+    private String cancelar;
 
     public Consulta(DadosAgendamentoConsultaDTO agendamentoConsultaDTO) {
         this.data = agendamentoConsultaDTO.data();
