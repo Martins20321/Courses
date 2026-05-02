@@ -41,9 +41,8 @@ public class AgendaConsultasService {
         Consulta consulta = repository.findById(dadosDTO.idConsulta())
                 .orElseThrow(() -> new ResourceNotFoundException(dadosDTO.idConsulta()));
 
-        consulta.setCancelar(dadosDTO.motivo());
-
         String motivo = dadosDTO.motivo();
+        consulta.setCancelar(motivo);
         Instant momentoCancelamento = dadosDTO.momento();
 
         if (motivo == null) {
