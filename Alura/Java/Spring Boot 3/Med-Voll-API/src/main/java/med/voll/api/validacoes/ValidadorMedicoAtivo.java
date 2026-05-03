@@ -18,7 +18,7 @@ public class ValidadorMedicoAtivo implements ValidadorStrategy{
         Medico medico = medicoRepository.findById(dadosDTO.idMedico())
                 .orElseThrow(() -> new ResourceNotFoundException(dadosDTO.idMedico()));
 
-        boolean medicoInativo = medicoRepository.FyndAtivoById(dadosDTO.idMedico());
+        boolean medicoInativo = medicoRepository.FindAtivoById(dadosDTO.idMedico());
 
         if (medicoInativo){
             throw new RuntimeException("Consulta não pode ser agendada com Medico inativo!");

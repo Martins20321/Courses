@@ -6,6 +6,7 @@ import med.voll.api.domain.Medico;
 import med.voll.api.domain.Paciente;
 import med.voll.api.dto.DadosAgendamentoConsultaDTO;
 import med.voll.api.dto.DadosCancelamentoConsultaDTO;
+import med.voll.api.dto.DadosDetalhamentoConsultaDTO;
 import med.voll.api.infra.exception.ResourceNotFoundException;
 import med.voll.api.repository.ConsultaRepository;
 import med.voll.api.repository.MedicoRepository;
@@ -28,10 +29,10 @@ public class AgendaConsultasService {
     //Procura todas as classes que implementam essa interface
     private final List<ValidadorStrategy> validadores = new ArrayList<>();
 
-    public void agendar(DadosAgendamentoConsultaDTO agendamentoConsultaDTO) {
+    public DadosDetalhamentoConsultaDTO agendar(DadosAgendamentoConsultaDTO agendamentoConsultaDTO) {
 
         validadores.forEach(validadorStrategy -> validadorStrategy.validar(agendamentoConsultaDTO));
-        
+
         Consulta consulta = new Consulta(agendamentoConsultaDTO);
 
         Medico medico = escolherMedico(agendamentoConsultaDTO);
@@ -42,6 +43,7 @@ public class AgendaConsultasService {
         consulta.setPaciente(paciente);
 
         consulta = repository.save(consulta);
+        return new DadosDetalhamentoConsultaDTO(consulta);
     }
 
 
