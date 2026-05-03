@@ -5,7 +5,9 @@ import med.voll.api.domain.Medico;
 import med.voll.api.dto.DadosAgendamentoConsultaDTO;
 import med.voll.api.infra.exception.ResourceNotFoundException;
 import med.voll.api.repository.MedicoRepository;
+import org.springframework.stereotype.Component;
 
+@Component
 @RequiredArgsConstructor
 public class ValidadorMedicoAtivo implements ValidadorStrategy{
 

@@ -10,9 +10,12 @@ import med.voll.api.infra.exception.ResourceNotFoundException;
 import med.voll.api.repository.ConsultaRepository;
 import med.voll.api.repository.MedicoRepository;
 import med.voll.api.repository.PacienteRepository;
+import med.voll.api.validacoes.ValidadorStrategy;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +25,13 @@ public class AgendaConsultasService {
     private final MedicoRepository medicoRepository;
     private final PacienteRepository pacienteRepository;
 
+    //Procura todas as classes que implementam essa interface
+    private final List<ValidadorStrategy> validadores = new ArrayList<>();
+
     public void agendar(DadosAgendamentoConsultaDTO agendamentoConsultaDTO) {
+
+        validadores.forEach(validadorStrategy -> validadorStrategy.validar(agendamentoConsultaDTO));
+        
         Consulta consulta = new Consulta(agendamentoConsultaDTO);
 
         Medico medico = escolherMedico(agendamentoConsultaDTO);
@@ -33,7 +42,6 @@ public class AgendaConsultasService {
         consulta.setPaciente(paciente);
 
         consulta = repository.save(consulta);
-        return new ConsultaDTO(consulta);
     }
 
 

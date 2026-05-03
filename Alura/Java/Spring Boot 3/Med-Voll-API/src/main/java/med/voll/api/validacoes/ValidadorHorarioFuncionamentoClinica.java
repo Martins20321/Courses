@@ -1,10 +1,12 @@
 package med.voll.api.validacoes;
 
 import med.voll.api.dto.DadosAgendamentoConsultaDTO;
+import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 
+@Component
 public class ValidadorHorarioFuncionamentoClinica implements ValidadorStrategy{
 
     @Override

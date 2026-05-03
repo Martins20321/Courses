@@ -3,7 +3,9 @@ package med.voll.api.validacoes;
 import lombok.RequiredArgsConstructor;
 import med.voll.api.dto.DadosAgendamentoConsultaDTO;
 import med.voll.api.repository.ConsultaRepository;
+import org.springframework.stereotype.Component;
 
+@Component
 @RequiredArgsConstructor
 public class ValidadorMedicoComOutraConsultaNoMesmoHorario implements ValidadorStrategy{
 
