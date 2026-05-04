@@ -1,4 +1,4 @@
-package med.voll.api.validacoes;
+package med.voll.api.validacoes.agendamento;
 
 import lombok.RequiredArgsConstructor;
 import med.voll.api.domain.Medico;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ValidadorMedicoAtivo implements ValidadorStrategy{
+public class ValidadorMedicoAtivo implements ValidadorStrategy {
 
     private final MedicoRepository medicoRepository;
 

@@ -1,4 +1,4 @@
-package med.voll.api.validacoes;
+package med.voll.api.validacoes.agendamento;
 
 import med.voll.api.dto.DadosAgendamentoConsultaDTO;
 import med.voll.api.infra.exception.ValidationException;
@@ -8,7 +8,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 
 @Component
-public class ValidadorHorarioFuncionamentoClinica implements ValidadorStrategy{
+public class ValidadorHorarioFuncionamentoClinica implements ValidadorStrategy {
 
     @Override
     public void validar(DadosAgendamentoConsultaDTO dadosDTO){

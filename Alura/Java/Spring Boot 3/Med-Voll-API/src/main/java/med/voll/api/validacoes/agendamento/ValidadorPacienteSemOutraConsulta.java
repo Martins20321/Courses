@@ -1,4 +1,4 @@
-package med.voll.api.validacoes;
+package med.voll.api.validacoes.agendamento;
 
 import lombok.RequiredArgsConstructor;
 import med.voll.api.dto.DadosAgendamentoConsultaDTO;

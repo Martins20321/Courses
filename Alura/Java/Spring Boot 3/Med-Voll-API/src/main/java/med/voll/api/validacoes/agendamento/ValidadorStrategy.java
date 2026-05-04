@@ -1,4 +1,4 @@
-package med.voll.api.validacoes;
+package med.voll.api.validacoes.agendamento;
 
 import med.voll.api.dto.DadosAgendamentoConsultaDTO;
 

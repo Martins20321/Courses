@@ -12,11 +12,10 @@ import med.voll.api.infra.exception.ValidationException;
 import med.voll.api.repository.ConsultaRepository;
 import med.voll.api.repository.MedicoRepository;
 import med.voll.api.repository.PacienteRepository;
-import med.voll.api.validacoes.ValidadorStrategy;
+import med.voll.api.validacoes.cancelamento.ValidadorCancelamentoStrategy;
+import med.voll.api.validacoes.agendamento.ValidadorStrategy;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -29,6 +28,7 @@ public class AgendaConsultasService {
 
     //Procura todas as classes que implementam essa interface
     private final List<ValidadorStrategy> validadores;
+    private final List<ValidadorCancelamentoStrategy> validadoresCancelamento;
 
     public DadosDetalhamentoConsultaDTO agendar(DadosAgendamentoConsultaDTO agendamentoConsultaDTO) {
 
@@ -50,21 +50,12 @@ public class AgendaConsultasService {
         return new DadosDetalhamentoConsultaDTO(consulta);
     }
 
+    public void cancelar(DadosCancelamentoConsultaDTO dadosDTO) {
 
-    public void cancelamento(DadosCancelamentoConsultaDTO dadosDTO) {
-        Consulta consulta = repository.findById(dadosDTO.idConsulta())
-                .orElseThrow(() -> new ResourceNotFoundException(dadosDTO.idConsulta()));
+        validadoresCancelamento.forEach(validadorCancelamento -> validadorCancelamento.validarCancelamento(dadosDTO));
 
-        String motivo = dadosDTO.motivo();
-        consulta.setCancelar(motivo);
-        Instant momentoCancelamento = dadosDTO.momento();
-
-        if (motivo == null) {
-            throw new RuntimeException("O motivo do cancelamento é obrigatório!");
-        }
-        if (momentoCancelamento.isBefore(momentoCancelamento.minusSeconds(86400))) {
-            throw new RuntimeException("Uma consulta somente poderá ser cancelada com antecedência mínima de 24 horas");
-        }
+       Consulta consulta = repository.findById(dadosDTO.idConsulta())
+                       .orElseThrow(() -> new ResourceNotFoundException(dadosDTO.idConsulta()));
 
         repository.delete(consulta);
     }
