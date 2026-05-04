@@ -24,10 +24,10 @@ public interface MedicoRepository extends JpaRepository<Medico, Long> {
             order by rand()
             LIMIT 1
             """)
-    Medico FindRandomly(Especialidade especialidade,LocalDateTime data);
+    Medico findRandomly(Especialidade especialidade,LocalDateTime data);
 
     @Query("""
-            SELECT m FROM Medico m WHERE m.id = :idMedico AND m.ativo = "true"
+            SELECT m.ativo FROM Medico m WHERE m.id = :idMedico
             """)
-    boolean FindAtivoById(Long idMedico);
+    Boolean findAtivoById(Long idMedico);
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import med.voll.api.domain.Paciente;
 import med.voll.api.dto.DadosAgendamentoConsultaDTO;
 import med.voll.api.infra.exception.ResourceNotFoundException;
+import med.voll.api.infra.exception.ValidationException;
 import med.voll.api.repository.PacienteRepository;
 import org.springframework.stereotype.Component;
 
@@ -19,9 +20,9 @@ public class ValidadorPacienteAtivo implements ValidadorStrategy {
         Paciente paciente = pacienteRepository.findById(dadosDTO.idPaciente())
                 .orElseThrow(() -> new ResourceNotFoundException(dadosDTO.idPaciente()));
 
-        boolean pacienteInativo = pacienteRepository.findAtivoById(dadosDTO.idPaciente());
-        if (pacienteInativo) {
-            throw new RuntimeException("Consulta não pode ser agendada com Paciente inativo!");
+        Boolean pacienteAtivo = pacienteRepository.findAtivoById(dadosDTO.idPaciente());
+        if (!pacienteAtivo) {
+            throw new ValidationException("Consulta não pode ser agendada com Paciente inativo!");
         }
     }
 }

@@ -2,6 +2,7 @@ package med.voll.api.validacoes;
 
 import lombok.RequiredArgsConstructor;
 import med.voll.api.dto.DadosAgendamentoConsultaDTO;
+import med.voll.api.infra.exception.ValidationException;
 import med.voll.api.repository.ConsultaRepository;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +22,7 @@ public class ValidadorPacienteSemOutraConsulta implements ValidadorStrategy {
                 .existsByPacienteIdAndDataBetween(dadosDTO.idPaciente(), primeiroHorario, ultimoHorario);
 
         if (pacientePossuiOutraConsultaNoDia) {
-            throw new RuntimeException("Paciente já possui outra consulta agendada neste dia");
+            throw new ValidationException("Paciente já possui outra consulta agendada neste dia");
         }
     }
 }

@@ -7,7 +7,7 @@ import med.voll.api.dto.DadosAgendamentoConsultaDTO;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "medicos")
+@Table(name = "consultas")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -29,6 +29,8 @@ public class Consulta {
     private Paciente paciente;
 
     private LocalDateTime data;
+
+    @Transient
     private String cancelar;
 
     public Consulta(DadosAgendamentoConsultaDTO agendamentoConsultaDTO) {

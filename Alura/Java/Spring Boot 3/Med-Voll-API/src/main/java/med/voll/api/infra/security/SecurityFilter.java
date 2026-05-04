@@ -29,7 +29,6 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         //Validando o token
         if (tokenJWT != null) {
-            System.out.println("Filtro Chamado");
             var subject = tokenService.getSubject(tokenJWT);
 
             //Spring considerar que o usuário está logado

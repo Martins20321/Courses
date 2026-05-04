@@ -8,6 +8,7 @@ import med.voll.api.dto.DadosAgendamentoConsultaDTO;
 import med.voll.api.dto.DadosCancelamentoConsultaDTO;
 import med.voll.api.dto.DadosDetalhamentoConsultaDTO;
 import med.voll.api.infra.exception.ResourceNotFoundException;
+import med.voll.api.infra.exception.ValidationException;
 import med.voll.api.repository.ConsultaRepository;
 import med.voll.api.repository.MedicoRepository;
 import med.voll.api.repository.PacienteRepository;
@@ -27,18 +28,21 @@ public class AgendaConsultasService {
     private final PacienteRepository pacienteRepository;
 
     //Procura todas as classes que implementam essa interface
-    private final List<ValidadorStrategy> validadores = new ArrayList<>();
+    private final List<ValidadorStrategy> validadores;
 
     public DadosDetalhamentoConsultaDTO agendar(DadosAgendamentoConsultaDTO agendamentoConsultaDTO) {
 
         validadores.forEach(validadorStrategy -> validadorStrategy.validar(agendamentoConsultaDTO));
 
-        Consulta consulta = new Consulta(agendamentoConsultaDTO);
-
-        Medico medico = escolherMedico(agendamentoConsultaDTO);
         Paciente paciente = pacienteRepository.findById(agendamentoConsultaDTO.idPaciente())
                 .orElseThrow(() -> new ResourceNotFoundException(agendamentoConsultaDTO.idPaciente()));
 
+        Medico medico = escolherMedico(agendamentoConsultaDTO);
+        if (medico == null) {
+            throw new ValidationException("Não Existe médico disponível nesta data!");
+        }
+
+        Consulta consulta = new Consulta(agendamentoConsultaDTO);
         consulta.setMedico(medico);
         consulta.setPaciente(paciente);
 
@@ -70,10 +74,10 @@ public class AgendaConsultasService {
             return medicoRepository.findById(agendamentoConsultaDTO.idMedico())
                     .orElseThrow(() -> new ResourceNotFoundException(agendamentoConsultaDTO.idMedico()));
         }
-        if (agendamentoConsultaDTO.especialidade() == null){
+        if (agendamentoConsultaDTO.especialidade() == null) {
             throw new RuntimeException("Especialidade é obrigatória quando o médico não for escolhido");
         }
 
-        return medicoRepository.FindRandomly(agendamentoConsultaDTO.especialidade(), agendamentoConsultaDTO.data());
+        return medicoRepository.findRandomly(agendamentoConsultaDTO.especialidade(), agendamentoConsultaDTO.data());
     }
 }
