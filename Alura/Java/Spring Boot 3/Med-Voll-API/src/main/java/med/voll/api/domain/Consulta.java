@@ -30,6 +30,8 @@ public class Consulta {
 
     private LocalDateTime data;
 
+    private String motivo_cancelamento;
+
     @Transient
     private String cancelar;
 
