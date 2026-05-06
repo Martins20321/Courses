@@ -1,7 +1,5 @@
 package med.voll.api.repository;
 
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.NotNull;
 import med.voll.api.domain.Medico;
 import med.voll.api.domain.enums.Especialidade;
 import org.springframework.data.domain.Page;
