@@ -19,7 +19,7 @@ public class ConsultaController {
 
     private final AgendaConsultasService consultasService;
 
-    @PostMapping
+    @PostMapping("/agendar")
     @Transactional
     public ResponseEntity<DadosDetalhamentoConsultaDTO> agendar(@RequestBody @Valid DadosAgendamentoConsultaDTO dadosDTO) {
         DadosDetalhamentoConsultaDTO consultaDTO = consultasService.agendar(dadosDTO);
