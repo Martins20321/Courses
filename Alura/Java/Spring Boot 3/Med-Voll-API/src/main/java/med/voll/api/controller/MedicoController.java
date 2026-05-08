@@ -53,7 +53,7 @@ public class MedicoController {
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity<DadosDetalhamentoMedicoDTO> atualizar(@RequestBody @Valid DadosAtualizacaoMedicoDTO dadosDTO, @PathVariable Long id) {
-        Medico medico = repository.findById(dadosDTO.id()).orElseThrow(() -> new ResourceNotFoundException(id));
+        Medico medico = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
         medico.atualizarInformacoes(dadosDTO);
 
         return ResponseEntity.ok().body(new DadosDetalhamentoMedicoDTO(medico));
