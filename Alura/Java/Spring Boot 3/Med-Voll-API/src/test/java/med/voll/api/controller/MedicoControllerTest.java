@@ -129,7 +129,6 @@ class MedicoControllerTest {
 
         //ARRANGE
 
-
         //ACT
         var response = mockMvc.perform(
                 get("/medicos/{id}", existingMedicoId)
