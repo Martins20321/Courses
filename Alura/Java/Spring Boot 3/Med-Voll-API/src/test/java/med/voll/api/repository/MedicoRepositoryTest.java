@@ -7,6 +7,7 @@ import med.voll.api.domain.enums.Especialidade;
 import med.voll.api.dto.DadosCadastroMedicoDTO;
 import med.voll.api.dto.DadosCadastroPacienteDTO;
 import med.voll.api.dto.DadosEnderecoDTO;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE) //Utilizando o banco de dados original
@@ -32,6 +34,11 @@ class MedicoRepositoryTest {
 
     @Autowired
     private TestEntityManager testEntityManager;
+
+    @BeforeEach
+    void cleanUp(){
+        repository.deleteAll();
+    }
 
     @Test
     @DisplayName("Deveria retornar null quando unico médico cadastrado não está disponível na data")
@@ -46,6 +53,7 @@ class MedicoRepositoryTest {
 
         //ACT
         var medicoLivre = repository.findRandomly(Especialidade.CARDIOLOGIA, proximaSegunda);
+
         //ASSERT
         //Só possui um médico no banco e ele tem consulta na próxima segunda
         assertThat(medicoLivre).isNull();
