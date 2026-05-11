@@ -1,9 +1,16 @@
 package med.voll.web_application.domain.medico;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "medicos")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode(of = "id")
+@ToString
 public class Medico {
 
     @Id
@@ -16,9 +23,6 @@ public class Medico {
     @Enumerated(EnumType.STRING)
     private Especialidade especialidade;
 
-    @Deprecated
-    public Medico(){}
-
     public Medico(DadosCadastroMedico dados) {
         atualizarDados(dados);
     }
@@ -29,30 +33,6 @@ public class Medico {
         this.telefone = dados.telefone();
         this.crm = dados.crm();
         this.especialidade = dados.especialidade();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getTelefone() {
-        return telefone;
-    }
-
-    public String getCrm() {
-        return crm;
-    }
-
-    public Especialidade getEspecialidade() {
-        return especialidade;
     }
 
 }
