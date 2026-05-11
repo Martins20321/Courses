@@ -26,6 +26,10 @@ public class Consulta {
 
     private LocalDateTime data;
 
+    public Consulta(Medico medico, DadosAgendamentoConsulta dados) {
+        modificarDados(medico, dados);
+    }
+
     public void modificarDados(Medico medico, DadosAgendamentoConsulta dados) {
         this.medico = medico;
         this.paciente = dados.paciente();
