@@ -1,4 +1,4 @@
-package med.voll.web_application.infra.exception.security;
+package med.voll.web_application.infra.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +22,10 @@ public class SecurityConfigurations {
                 .username("anna@email.com")
                 .password("{noop}anna123")
                 .build();
-        return new InMemoryUserDetailsManager(user1, user2);
+        UserDetails user3 = User.builder()
+                .username("jose@email.com")
+                .password("{noop}jose123")
+                .build();
+        return new InMemoryUserDetailsManager(user1, user2, user3);
     }
 }
