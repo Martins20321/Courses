@@ -37,6 +37,9 @@ public class SecurityConfigurations {
                 .requestMatchers("/css/**", "/js/**", "/assest/**").permitAll()
                 .anyRequest().authenticated();})
                 .formLogin(flogin -> flogin
-                        .loginPage("/login").defaultSuccessUrl("/").permitAll()).build();
+                        .loginPage("/login").defaultSuccessUrl("/").permitAll())
+                .logout(logout -> logout.logoutSuccessUrl("/login?logout").permitAll())
+                .build();
+
     }
 }
