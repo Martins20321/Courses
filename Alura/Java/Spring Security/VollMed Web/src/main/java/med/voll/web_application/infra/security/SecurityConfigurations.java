@@ -38,8 +38,7 @@ public class SecurityConfigurations {
                 .anyRequest().authenticated();})
                 .formLogin(flogin -> flogin
                         .loginPage("/login").defaultSuccessUrl("/").permitAll())
-                .logout(logout -> logout.logoutSuccessUrl("/login?logout").permitAll())
+                .logout(logout -> logout.logoutSuccessUrl("/logout").permitAll())
                 .build();
-
     }
 }
