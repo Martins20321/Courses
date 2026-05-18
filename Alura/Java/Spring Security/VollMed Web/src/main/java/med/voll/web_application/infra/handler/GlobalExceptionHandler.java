@@ -2,6 +2,7 @@ package med.voll.web_application.infra.handler;
 
 import jakarta.servlet.http.HttpServletRequest;
 import med.voll.web_application.infra.exception.ErrorResponse;
+import med.voll.web_application.infra.exception.RegraDeNegocioException;
 import med.voll.web_application.infra.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,5 +22,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(errorResponse);
     }
 
+    @ExceptionHandler(RegraDeNegocioException.class)
+    public ResponseEntity<ErrorResponse> handleRegraDeNegocioException(RegraDeNegocioException ex, HttpServletRequest request){
+        String error = "Erro na lógica de negócio";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        ErrorResponse errorResponse = new ErrorResponse(Instant.now(), status.value(), error, ex.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(errorResponse);
+    }
 
 }

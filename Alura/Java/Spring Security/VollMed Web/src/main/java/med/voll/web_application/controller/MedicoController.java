@@ -1,7 +1,7 @@
 package med.voll.web_application.controller;
 
 import jakarta.validation.Valid;
-import med.voll.web_application.domain.RegraDeNegocioException;
+import med.voll.web_application.infra.exception.RegraDeNegocioException;
 import med.voll.web_application.domain.medico.DadosCadastroMedico;
 import med.voll.web_application.domain.medico.DadosListagemMedico;
 import med.voll.web_application.domain.medico.Especialidade;

@@ -1,7 +1,7 @@
 package med.voll.web_application.domain.medico;
 
 import jakarta.transaction.Transactional;
-import med.voll.web_application.domain.RegraDeNegocioException;
+import med.voll.web_application.infra.exception.RegraDeNegocioException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
