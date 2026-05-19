@@ -1,17 +1,19 @@
 package br.com.martinsdev.forumhub.domain.curso;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.io.Serializable;
 
 @Entity
 @Table(name = "cursos")
-public class Curso {
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode(of = "id")
+@ToString
+public class Curso implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,15 +23,4 @@ public class Curso {
     @Enumerated(EnumType.STRING)
     private Categoria categoria;
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public Categoria getCategoria() {
-        return categoria;
-    }
 }

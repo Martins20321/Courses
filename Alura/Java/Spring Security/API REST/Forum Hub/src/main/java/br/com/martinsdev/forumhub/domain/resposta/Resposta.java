@@ -8,12 +8,20 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "respostas")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode(of = "id")
+@ToString
 public class Resposta {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,39 +34,12 @@ public class Resposta {
     @JoinColumn(name = "topico_id")
     private Topico topico;
 
-    @Deprecated
-    public Resposta(){}
-
     public Resposta(DadosCadastroResposta dados, Topico topico) {
         this.mensagem = dados.mensagem();
         this.autor = dados.autor();
         this.dataCriacao = LocalDateTime.now();
         this.solucao = false;
         this.topico = topico;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getMensagem() {
-        return mensagem;
-    }
-
-    public String getAutor() {
-        return autor;
-    }
-
-    public LocalDateTime getDataCriacao() {
-        return dataCriacao;
-    }
-
-    public Boolean ehSolucao() {
-        return solucao;
-    }
-
-    public Topico getTopico() {
-        return topico;
     }
 
     public Resposta atualizarInformacoes(DadosAtualizacaoResposta dados) {

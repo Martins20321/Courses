@@ -11,11 +11,18 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "topicos")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode(of = "id")
+@ToString
 public class Topico {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,9 +42,6 @@ public class Topico {
     @JoinColumn(name = "curso_id")
     private Curso curso;
 
-    @Deprecated
-    public Topico(){}
-
     public Topico(DadosCadastroTopico dados, Curso curso) {
         this.titulo = dados.titulo();
         this.mensagem = dados.mensagem();
@@ -48,38 +52,6 @@ public class Topico {
         this.quantidadeRespostas = 0;
         this.categoria = curso.getCategoria();
         this.curso = curso;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getTitulo() {
-        return titulo;
-    }
-
-    public String getMensagem() {
-        return mensagem;
-    }
-
-    public String getAutor() {
-        return autor;
-    }
-
-    public LocalDateTime getDataCriacao() {
-        return dataCriacao;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public Curso getCurso() {
-        return curso;
-    }
-
-    public Integer getQuantidadeRespostas() {
-        return quantidadeRespostas;
     }
 
     public Topico atualizarInformacoes(DadosAtualizacaoTopico dados, Curso curso) {
