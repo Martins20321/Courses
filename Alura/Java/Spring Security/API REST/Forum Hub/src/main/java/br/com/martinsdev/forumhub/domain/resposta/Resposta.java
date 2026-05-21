@@ -10,6 +10,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
@@ -20,8 +21,7 @@ import java.time.LocalDateTime;
 @Setter
 @EqualsAndHashCode(of = "id")
 @ToString
-public class Resposta {
-
+public class Resposta implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -40,6 +40,10 @@ public class Resposta {
         this.dataCriacao = LocalDateTime.now();
         this.solucao = false;
         this.topico = topico;
+    }
+
+    public Boolean ehSolucao() {
+        return solucao;
     }
 
     public Resposta atualizarInformacoes(DadosAtualizacaoResposta dados) {
