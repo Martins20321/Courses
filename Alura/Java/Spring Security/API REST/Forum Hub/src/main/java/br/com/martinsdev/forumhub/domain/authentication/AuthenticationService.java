@@ -1,5 +1,6 @@
-package br.com.martinsdev.forumhub.domain.usuario;
+package br.com.martinsdev.forumhub.domain.authentication;
 
+import br.com.martinsdev.forumhub.domain.usuario.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
