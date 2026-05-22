@@ -4,6 +4,6 @@ CREATE TABLE usuarios (
     senha VARCHAR(255) NOT NULL,
     nome_completo VARCHAR(100) NOT NULL,
     nick_name VARCHAR(100) NOT NULL UNIQUE,
-    headline VARCHAR(30),
-    biografia TEXT,
+    head_line VARCHAR(30),
+    biografia TEXT
     );

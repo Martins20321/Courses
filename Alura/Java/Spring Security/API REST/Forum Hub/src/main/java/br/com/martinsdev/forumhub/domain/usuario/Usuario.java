@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "user")
+@Table(name = "usuarios")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -22,7 +22,7 @@ public class Usuario implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nomeCompleto;
-    private String login;
+    private String email;
     private String senha;
     private String nickName;
     private String biografia;
@@ -40,7 +40,7 @@ public class Usuario implements UserDetails {
 
     @Override
     public String getUsername() {
-        return login;
+        return email;
     }
 
     @Override
