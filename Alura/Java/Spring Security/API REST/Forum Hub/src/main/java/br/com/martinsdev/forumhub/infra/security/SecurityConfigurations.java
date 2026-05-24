@@ -19,7 +19,10 @@ public class SecurityConfigurations {
     public SecurityFilterChain securityFilterChain(HttpSecurity security) throws Exception {
         return security.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable())
                 .sessionManagement(sessionManagement
-                        -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).build();
+                        -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(requestMatcher -> requestMatcher.requestMatchers("/auth/login").permitAll()
+                        .anyRequest().authenticated())
+                .build();
     }
 
     //Ensinando ao Spring como fazer a injeção do AuthenticationManager
