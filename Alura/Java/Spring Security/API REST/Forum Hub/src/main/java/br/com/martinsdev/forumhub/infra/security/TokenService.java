@@ -33,6 +33,20 @@ public class TokenService {
         }
     }
 
+    public Object gerarRefreshToken(Usuario usuario) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secretKey);
+            return JWT.create()
+                    .withIssuer("Forum Hub")
+                    .withSubject(usuario.getId().toString())
+                    .withExpiresAt(dataExpiracaoRefreshToken())
+                    .withClaim("id", usuario.getId())
+                    .sign(algorithm);
+        } catch (JWTCreationException exception){
+            throw new ErroTokenJWTException("Não foi possível fazer a geração do Refresh Token JWT!");
+        }
+    }
+
     public String getSubject(String tokenJWT){
         try {
             Algorithm algorithm = Algorithm.HMAC256(secretKey);
@@ -48,6 +62,10 @@ public class TokenService {
     }
 
     private Instant dataExpiracao() {
+        return LocalDateTime.now().plusMinutes(30).toInstant(ZoneOffset.of("-03:00"));
+    }
+
+    private Instant dataExpiracaoRefreshToken() {
         return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
     }
 }

@@ -27,8 +27,9 @@ public class LoginController {
         var authenticationToken = new UsernamePasswordAuthenticationToken(dadosDTO.email(), dadosDTO.password());
         var authentication = authenticationManager.authenticate(authenticationToken); //Processo de autenticação
         var tokenJWT = tokenService.gerarToken((Usuario) authentication.getPrincipal());
+        var refreshToken = tokenService.gerarRefreshToken((Usuario) authentication.getPrincipal());
 
         //Próximo passo: fazer o bloqueio de outra requisições
-        return ResponseEntity.ok().body(new DadosTokenJWT(tokenJWT));
+        return ResponseEntity.ok().body(new DadosTokenJWT(tokenJWT, refreshToken.toString()));
     }
 }
