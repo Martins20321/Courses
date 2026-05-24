@@ -35,6 +35,7 @@ public class SecurityFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
+        //Teve retorno null, no recoverToken
         filterChain.doFilter(request, response);
     }
 

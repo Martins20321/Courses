@@ -1,6 +1,7 @@
 package br.com.martinsdev.forumhub.infra.security;
 
 import br.com.martinsdev.forumhub.domain.usuario.Usuario;
+import br.com.martinsdev.forumhub.infra.exception.ErroTokenJWTException;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
@@ -28,7 +29,7 @@ public class TokenService {
                     .withClaim("id", usuario.getId())
                     .sign(algorithm);
         } catch (JWTCreationException exception){
-            throw new RuntimeException("Não foi possível fazer a geração do token JWT!");
+            throw new ErroTokenJWTException("Não foi possível fazer a geração do token JWT!");
         }
     }
 
@@ -42,7 +43,7 @@ public class TokenService {
                      .getSubject();
 
         } catch (JWTVerificationException exception){
-            throw new RuntimeException("O token está inválido ou expirado!");
+            throw new ErroTokenJWTException("Este token está inválido ou expirado!");
         }
     }
 
