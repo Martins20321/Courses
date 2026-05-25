@@ -25,7 +25,7 @@ public class SecurityConfigurations {
         return security.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable())
                 .sessionManagement(sessionManagement
                         -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(requestMatcher -> requestMatcher.requestMatchers("/auth/login").permitAll()
+                .authorizeHttpRequests(requestMatcher -> requestMatcher.requestMatchers("/auth/login", "/auth/refresh").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

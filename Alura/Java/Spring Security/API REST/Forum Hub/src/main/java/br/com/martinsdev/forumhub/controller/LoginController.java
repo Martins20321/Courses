@@ -1,7 +1,11 @@
 package br.com.martinsdev.forumhub.controller;
 
+import br.com.martinsdev.forumhub.domain.authentication.AuthenticationService;
 import br.com.martinsdev.forumhub.domain.authentication.dto.DadosLoginDTO;
 import br.com.martinsdev.forumhub.domain.usuario.Usuario;
+import br.com.martinsdev.forumhub.domain.usuario.UsuarioRepository;
+import br.com.martinsdev.forumhub.infra.exception.ResourceNotFoundException;
+import br.com.martinsdev.forumhub.infra.security.DadosRefreshTokenDTO;
 import br.com.martinsdev.forumhub.infra.security.DadosTokenJWT;
 import br.com.martinsdev.forumhub.infra.security.TokenService;
 import jakarta.validation.Valid;
@@ -21,6 +25,7 @@ public class LoginController {
 
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
+    private final UsuarioRepository repository;
 
     @PostMapping("/login")
     public ResponseEntity<DadosTokenJWT> efetuarLogin(@RequestBody @Valid DadosLoginDTO dadosDTO) {
@@ -29,7 +34,18 @@ public class LoginController {
         var tokenJWT = tokenService.gerarToken((Usuario) authentication.getPrincipal());
         var refreshToken = tokenService.gerarRefreshToken((Usuario) authentication.getPrincipal());
 
-        //Próximo passo: fazer o bloqueio de outra requisições
         return ResponseEntity.ok().body(new DadosTokenJWT(tokenJWT, refreshToken.toString()));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<DadosTokenJWT> atualizarToken(@RequestBody @Valid DadosRefreshTokenDTO dados){
+        var refreshToken = dados.refreshToken();
+        Long idUsuario = Long.valueOf(tokenService.getSubject(refreshToken));
+        var usuario = repository.findById(idUsuario).orElseThrow(() -> new ResourceNotFoundException(idUsuario));
+
+        var tokenJWT = tokenService.gerarToken(usuario);
+        var tokenAtualizado = tokenService.gerarRefreshToken(usuario);
+
+        return ResponseEntity.ok().body(new DadosTokenJWT(tokenJWT, tokenAtualizado.toString()));
     }
 }
