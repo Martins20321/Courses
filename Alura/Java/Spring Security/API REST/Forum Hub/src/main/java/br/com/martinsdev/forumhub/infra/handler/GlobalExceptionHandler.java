@@ -1,6 +1,7 @@
 package br.com.martinsdev.forumhub.infra.handler;
 
 import br.com.martinsdev.forumhub.infra.exception.ErrorResponse;
+import br.com.martinsdev.forumhub.infra.exception.RefreshTokenException;
 import br.com.martinsdev.forumhub.infra.exception.RegraDeNegocioException;
 import br.com.martinsdev.forumhub.infra.exception.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,11 +34,19 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpServletRequest request){
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpServletRequest request) {
         String error = ex.getFieldErrors().stream().map(fieldError -> fieldError.getField() +
                 ": " + fieldError.getDefaultMessage()).collect(Collectors.joining());
         HttpStatus status = HttpStatus.BAD_REQUEST;
         ErrorResponse errorResponse = new ErrorResponse(Instant.now(), status.value(), error, "", request.getRequestURI());
+        return ResponseEntity.status(status).body(errorResponse);
+    }
+
+    @ExceptionHandler(RefreshTokenException.class)
+    public ResponseEntity<ErrorResponse> handleRefreshToken(RefreshTokenException ex, HttpServletRequest request) {
+        String error = "Ocorreu um erro ao validar o refresh token!";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        ErrorResponse errorResponse = new ErrorResponse(Instant.now(), status.value(), error, ex.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(errorResponse);
     }
 }

@@ -1,11 +1,14 @@
 package br.com.martinsdev.forumhub.infra.security;
 
+import br.com.martinsdev.forumhub.domain.refreshtoken.RefreshToken;
+import br.com.martinsdev.forumhub.domain.refreshtoken.RefreshTokenRepository;
 import br.com.martinsdev.forumhub.domain.usuario.Usuario;
 import br.com.martinsdev.forumhub.infra.exception.ErroTokenJWTException;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +17,13 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 @Service
+@RequiredArgsConstructor
 public class TokenService {
 
     @Value("${spring.securtiy.secret.key}")
     private String secretKey;
+
+    private final RefreshTokenRepository repository;
 
     public String gerarToken(Usuario usuario){
         try {
@@ -33,15 +39,17 @@ public class TokenService {
         }
     }
 
-    public Object gerarRefreshToken(Usuario usuario) {
+    public String gerarRefreshToken(Usuario usuario) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secretKey);
-            return JWT.create()
+            String refreshToken = JWT.create()
                     .withIssuer("Forum Hub")
                     .withSubject(usuario.getId().toString())
                     .withExpiresAt(dataExpiracaoRefreshToken())
                     .withClaim("id", usuario.getId())
                     .sign(algorithm);
+            repository.save(new RefreshToken(null, refreshToken, false, usuario));
+            return refreshToken;
         } catch (JWTCreationException exception){
             throw new ErroTokenJWTException("Não foi possível fazer a geração do Refresh Token JWT!");
         }

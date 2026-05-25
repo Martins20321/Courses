@@ -1,5 +1,6 @@
 package br.com.martinsdev.forumhub.domain.usuario;
 
+import br.com.martinsdev.forumhub.domain.refreshtoken.RefreshToken;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
