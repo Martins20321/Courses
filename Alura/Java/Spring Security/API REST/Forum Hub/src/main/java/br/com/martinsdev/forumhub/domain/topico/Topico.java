@@ -2,15 +2,8 @@ package br.com.martinsdev.forumhub.domain.topico;
 
 import br.com.martinsdev.forumhub.domain.curso.Categoria;
 import br.com.martinsdev.forumhub.domain.curso.Curso;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import br.com.martinsdev.forumhub.domain.usuario.Usuario;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -29,7 +22,10 @@ public class Topico {
     private Long id;
     private String titulo;
     private String mensagem;
-    private String autor;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "autor_id")
+    private Usuario autor;
     private LocalDateTime dataCriacao;
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -42,10 +38,10 @@ public class Topico {
     @JoinColumn(name = "curso_id")
     private Curso curso;
 
-    public Topico(DadosCadastroTopico dados, Curso curso) {
+    public Topico(DadosCadastroTopico dados, Curso curso, Usuario autor) {
         this.titulo = dados.titulo();
         this.mensagem = dados.mensagem();
-        this.autor = dados.autor();
+        this.autor = autor;
         this.dataCriacao = LocalDateTime.now();
         this.status = Status.NAO_RESPONDIDO;
         this.aberto = true;

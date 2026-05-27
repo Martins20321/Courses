@@ -6,8 +6,6 @@ import br.com.martinsdev.forumhub.domain.refreshtoken.RefreshTokenRepository;
 import br.com.martinsdev.forumhub.domain.usuario.Usuario;
 import br.com.martinsdev.forumhub.domain.usuario.UsuarioRepository;
 import br.com.martinsdev.forumhub.infra.exception.RefreshTokenException;
-import br.com.martinsdev.forumhub.infra.exception.RefreshTokenNotFoundException;
-import br.com.martinsdev.forumhub.infra.exception.ResourceNotFoundException;
 import br.com.martinsdev.forumhub.infra.security.DadosRefreshTokenDTO;
 import br.com.martinsdev.forumhub.infra.security.DadosTokenJWT;
 import br.com.martinsdev.forumhub.infra.security.TokenService;
@@ -45,7 +43,7 @@ public class LoginController {
     public ResponseEntity<DadosTokenJWT> atualizarToken(@RequestBody @Valid DadosRefreshTokenDTO dados){
         tokenService.getSubject(dados.refreshToken());
         RefreshToken refreshToken = refreshTokenRepository.findByToken(dados.refreshToken())
-                .orElseThrow(() -> new RefreshTokenNotFoundException(dados.refreshToken()));
+                .orElseThrow(() -> new RefreshTokenException("Token inválido ou expirado: " + dados.refreshToken()));
 
         if (refreshToken.isUtilizado()){
             throw new RefreshTokenException("Este token já foi utilizado!");

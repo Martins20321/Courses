@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -45,6 +46,7 @@ public class TokenService {
             String refreshToken = JWT.create()
                     .withIssuer("Forum Hub")
                     .withSubject(usuario.getId().toString())
+                    .withJWTId(UUID.randomUUID().toString()) //Garante que cada refreshToken seja único
                     .withExpiresAt(dataExpiracaoRefreshToken())
                     .withClaim("id", usuario.getId())
                     .sign(algorithm);
