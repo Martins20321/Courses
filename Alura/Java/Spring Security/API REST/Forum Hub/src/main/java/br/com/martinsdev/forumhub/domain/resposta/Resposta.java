@@ -1,13 +1,8 @@
 package br.com.martinsdev.forumhub.domain.resposta;
 
 import br.com.martinsdev.forumhub.domain.topico.Topico;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import br.com.martinsdev.forumhub.domain.usuario.Usuario;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
@@ -26,7 +21,10 @@ public class Resposta implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String mensagem;
-    private String autor;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "autor_id")
+    private Usuario autor;
     private LocalDateTime dataCriacao;
     private Boolean solucao;
 
@@ -34,9 +32,9 @@ public class Resposta implements Serializable {
     @JoinColumn(name = "topico_id")
     private Topico topico;
 
-    public Resposta(DadosCadastroResposta dados, Topico topico) {
+    public Resposta(DadosCadastroResposta dados, Topico topico, Usuario autor) {
         this.mensagem = dados.mensagem();
-        this.autor = dados.autor();
+        this.autor = autor;
         this.dataCriacao = LocalDateTime.now();
         this.solucao = false;
         this.topico = topico;

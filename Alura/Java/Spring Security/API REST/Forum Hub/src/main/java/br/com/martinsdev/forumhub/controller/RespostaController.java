@@ -4,8 +4,11 @@ import br.com.martinsdev.forumhub.domain.resposta.DadosListagemResposta;
 import br.com.martinsdev.forumhub.domain.resposta.DadosCadastroResposta;
 import br.com.martinsdev.forumhub.domain.resposta.DadosAtualizacaoResposta;
 import br.com.martinsdev.forumhub.domain.resposta.RespostaService;
+import br.com.martinsdev.forumhub.domain.usuario.Usuario;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,17 +21,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("topicos/{idTopico}/respostas")
+@RequiredArgsConstructor
 public class RespostaController {
 
     private final RespostaService service;
 
-    public RespostaController(RespostaService service) {
-        this.service = service;
-    }
-
     @PostMapping
-    public ResponseEntity<DadosListagemResposta> cadastrar(@PathVariable Long idTopico, @RequestBody @Valid DadosCadastroResposta dados, UriComponentsBuilder uriBuilder){
-        var resposta = service.cadastrar(dados, idTopico);
+    public ResponseEntity<DadosListagemResposta> cadastrar(@PathVariable Long idTopico, @RequestBody @Valid DadosCadastroResposta dados, UriComponentsBuilder uriBuilder, @AuthenticationPrincipal Usuario autor){
+        var resposta = service.cadastrar(dados, idTopico, autor);
         var uri = uriBuilder.path("topicos/{idTopico}/respostas/{id}").buildAndExpand(resposta.getTopico().getId(), resposta.getId()).toUri();
         return ResponseEntity.created(uri).body(new DadosListagemResposta(resposta));
     }
