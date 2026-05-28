@@ -1,6 +1,6 @@
 package br.com.martinsdev.forumhub.infra.security;
 
-import br.com.martinsdev.forumhub.domain.authentication.AuthenticationService;
+import br.com.martinsdev.forumhub.domain.usuario.UsuarioService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +18,7 @@ import java.io.IOException;
 public class SecurityFilter extends OncePerRequestFilter {
 
     private final TokenService tokenService;
-    private final AuthenticationService service;
+    private final UsuarioService service;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
