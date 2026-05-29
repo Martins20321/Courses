@@ -41,7 +41,7 @@ public class UsuarioController {
          service.alterarSenha(usuarioLogado, dadosDTO);
         return ResponseEntity.noContent().build();
     }
-    @DeleteMapping("desativar}")
+    @DeleteMapping("desativar")
     public ResponseEntity<Void> deletarUsuario(@AuthenticationPrincipal Usuario usuarioLogado){
         service.desativarPerfil(usuarioLogado);
         return ResponseEntity.noContent().build();

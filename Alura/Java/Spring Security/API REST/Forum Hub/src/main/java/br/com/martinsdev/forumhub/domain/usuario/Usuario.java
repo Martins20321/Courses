@@ -92,7 +92,6 @@ public class Usuario implements UserDetails {
     }
 
     public void atualizarDados(DadosAtualizacaoUsuario dadosDTO) {
-        this.nomeCompleto = dadosDTO.nomeCompleto();
         this.nickName = dadosDTO.nickName();
         this.headLine = dadosDTO.headLine();
         this.biografia = dadosDTO.biografia();
