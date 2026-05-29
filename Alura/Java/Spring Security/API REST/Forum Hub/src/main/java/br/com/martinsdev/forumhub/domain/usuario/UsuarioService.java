@@ -1,5 +1,6 @@
 package br.com.martinsdev.forumhub.domain.usuario;
 
+import br.com.martinsdev.forumhub.infra.email.EmailService;
 import br.com.martinsdev.forumhub.infra.exception.RegraDeNegocioException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,7 @@ public class UsuarioService implements UserDetailsService {
 
     private final UsuarioRepository repository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -31,7 +33,49 @@ public class UsuarioService implements UserDetailsService {
         }
 
         Usuario usuario = new Usuario(dadosDTO, passwordEncoder.encode(dadosDTO.senha()));
+
+        emailService.verificaoEmail(usuario);
+
         repository.save(usuario);
         return usuario;
+    }
+
+    @Transactional
+    public Usuario atualizarPerfil(Usuario usuarioLogado, DadosAtualizacaoUsuario dadosDTO){
+        Usuario usuario = repository.findByEmailIgnoreCaseAndVerificadoTrue(usuarioLogado.toString())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado no banco de dados!"));
+
+        usuario.atualizarDados(dadosDTO);
+        repository.save(usuario);
+        return usuario;
+    }
+
+    @Transactional
+    public void alterarSenha(Usuario usuarioLogado, DadosAlteracaoSenha dadosDTO) {
+        if (!passwordEncoder.matches(dadosDTO.senhaAtual(), usuarioLogado.getPassword())){
+            throw new RegraDeNegocioException("Senha digitada não confere com a atual");
+        }
+
+        if (!dadosDTO.senhaNova().equals(dadosDTO.senhaConfirmada())){
+            throw new RegraDeNegocioException("Por gentileza, confira a senha de confirmação!");
+        }
+
+        usuarioLogado.setSenha(passwordEncoder.encode(dadosDTO.senhaAtual()));
+    }
+    @Transactional
+    public void desativarPerfil(Usuario usuarioLogado) {
+        Usuario usuario = repository.findByEmailIgnoreCaseAndVerificadoTrue(usuarioLogado.toString())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+
+        usuario.setAtivo(false);
+        repository.save(usuario);
+    }
+
+    @Transactional
+    public void verificarEmail(String codigo) {
+        Usuario usuario = repository.findByTokenIdentificador(codigo).
+                orElseThrow(() -> new RegraDeNegocioException("Usuário não encontrado!"));
+
+        usuario.verificar();
     }
 }

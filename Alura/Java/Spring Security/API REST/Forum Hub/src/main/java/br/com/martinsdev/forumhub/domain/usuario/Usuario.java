@@ -1,5 +1,6 @@
 package br.com.martinsdev.forumhub.domain.usuario;
 
+import br.com.martinsdev.forumhub.infra.exception.RegraDeNegocioException;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -32,6 +33,7 @@ public class Usuario implements UserDetails {
     private boolean verificado;
     private String tokenIdentificador;
     private LocalDateTime tokenExpiracao;
+    private boolean ativo = true;
 
     public Usuario(DadosCadastroUsuarioDTO dadosDTO, String encode) {
         this.nomeCompleto = dadosDTO.nomeCompleto();
@@ -78,5 +80,21 @@ public class Usuario implements UserDetails {
     @Override
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();
+    }
+
+    public void verificar() {
+        if (tokenExpiracao.isBefore(LocalDateTime.now())){
+            throw new RegraDeNegocioException("O link de verificação expirou!");
+        }
+        this.verificado = true;
+        this.tokenIdentificador = null;
+        this.tokenExpiracao = null;
+    }
+
+    public void atualizarDados(DadosAtualizacaoUsuario dadosDTO) {
+        this.nomeCompleto = dadosDTO.nomeCompleto();
+        this.nickName = dadosDTO.nickName();
+        this.headLine = dadosDTO.headLine();
+        this.biografia = dadosDTO.biografia();
     }
 }
