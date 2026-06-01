@@ -1,5 +1,7 @@
 package br.com.martinsdev.forumhub.domain.usuario;
 
+import br.com.martinsdev.forumhub.domain.perfil.PerfilRepository;
+import br.com.martinsdev.forumhub.domain.perfil.enums.PerfilUsuario;
 import br.com.martinsdev.forumhub.infra.email.EmailService;
 import br.com.martinsdev.forumhub.infra.exception.RegraDeNegocioException;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ public class UsuarioService implements UserDetailsService {
     private final UsuarioRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
+    private final PerfilRepository perfilRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -32,7 +35,9 @@ public class UsuarioService implements UserDetailsService {
             throw new RegraDeNegocioException("Já existe uma conta cadastrada com esse email!");
         }
 
-        Usuario usuario = new Usuario(dadosDTO, passwordEncoder.encode(dadosDTO.senha()));
+        var perfil = perfilRepository.findByTipo(PerfilUsuario.ESTUDANTE)
+                .orElseThrow(() -> new RegraDeNegocioException("Não foi possível encontrar o perfil informado!"));
+        Usuario usuario = new Usuario(dadosDTO, passwordEncoder.encode(dadosDTO.senha()), perfil);
 
         emailService.verificaoEmail(usuario);
 

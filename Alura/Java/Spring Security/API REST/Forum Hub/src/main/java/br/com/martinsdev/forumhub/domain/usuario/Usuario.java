@@ -1,12 +1,10 @@
 package br.com.martinsdev.forumhub.domain.usuario;
 
 import br.com.martinsdev.forumhub.domain.perfil.Perfil;
-import br.com.martinsdev.forumhub.domain.perfil.enums.PerfilUsuario;
 import br.com.martinsdev.forumhub.infra.exception.RegraDeNegocioException;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
@@ -45,7 +43,7 @@ public class Usuario implements UserDetails {
     inverseJoinColumns = @JoinColumn(name = "perfil_id"))
     private List<Perfil> perfis = new ArrayList<>();
 
-    public Usuario(DadosCadastroUsuarioDTO dadosDTO, String encode) {
+    public Usuario(DadosCadastroUsuarioDTO dadosDTO, String encode, Perfil perfil) {
         this.nomeCompleto = dadosDTO.nomeCompleto();
         this.email = dadosDTO.email();
         this.senha = encode;
@@ -55,6 +53,7 @@ public class Usuario implements UserDetails {
         this.verificado = false;
         this.tokenIdentificador = UUID.randomUUID().toString();
         this.tokenExpiracao = LocalDateTime.now().plusMinutes(30);
+        this.perfis.add(perfil);
     }
 
     @Override
