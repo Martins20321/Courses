@@ -39,6 +39,10 @@ public class Usuario implements UserDetails {
     private boolean ativo = true;
 
     //Trabalhando com múltiplos perfis
+    @ManyToMany(fetch = FetchType.EAGER) //Toda vez que puxar um usuário, queremos ver as permissões do usuário
+    @JoinTable(name = "usuarios_perfis" ,
+    joinColumns = @JoinColumn(name = "usuario_id"),
+    inverseJoinColumns = @JoinColumn(name = "perfil_id"))
     private List<Perfil> perfis = new ArrayList<>();
 
     public Usuario(DadosCadastroUsuarioDTO dadosDTO, String encode) {

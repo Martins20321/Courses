@@ -19,10 +19,10 @@ public class Perfil implements GrantedAuthority {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private PerfilUsuario perfilUsuario;
+    private PerfilUsuario tipo;
 
     @Override
     public String getAuthority() {
-        return "ROLE_" + perfilUsuario;
+        return "ROLE_" + tipo;
     }
 }
