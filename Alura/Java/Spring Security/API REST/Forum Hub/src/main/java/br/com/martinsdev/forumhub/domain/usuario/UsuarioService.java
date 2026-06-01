@@ -62,6 +62,7 @@ public class UsuarioService implements UserDetailsService {
 
         usuarioLogado.setSenha(passwordEncoder.encode(dadosDTO.senhaAtual()));
     }
+
     @Transactional
     public void desativarPerfil(Usuario usuarioLogado) {
         Usuario usuario = repository.findByEmailIgnoreCaseAndVerificadoTrue(usuarioLogado.toString())

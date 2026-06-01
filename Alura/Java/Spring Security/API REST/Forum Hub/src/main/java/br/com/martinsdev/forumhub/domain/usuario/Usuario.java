@@ -1,5 +1,7 @@
 package br.com.martinsdev.forumhub.domain.usuario;
 
+import br.com.martinsdev.forumhub.domain.perfil.Perfil;
+import br.com.martinsdev.forumhub.domain.perfil.enums.PerfilUsuario;
 import br.com.martinsdev.forumhub.infra.exception.RegraDeNegocioException;
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -34,6 +37,9 @@ public class Usuario implements UserDetails {
     private String tokenIdentificador;
     private LocalDateTime tokenExpiracao;
     private boolean ativo = true;
+
+    //Trabalhando com múltiplos perfis
+    private List<Perfil> perfis = new ArrayList<>();
 
     public Usuario(DadosCadastroUsuarioDTO dadosDTO, String encode) {
         this.nomeCompleto = dadosDTO.nomeCompleto();
