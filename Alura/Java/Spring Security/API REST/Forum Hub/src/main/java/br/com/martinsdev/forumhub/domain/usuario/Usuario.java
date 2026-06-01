@@ -55,7 +55,7 @@ public class Usuario implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() { //Relacionado a permissões
-        return List.of(new SimpleGrantedAuthority("USER_ROLE"));
+        return perfis;
     }
 
     @Override

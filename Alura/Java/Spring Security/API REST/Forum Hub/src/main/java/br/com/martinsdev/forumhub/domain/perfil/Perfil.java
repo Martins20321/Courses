@@ -3,6 +3,7 @@ package br.com.martinsdev.forumhub.domain.perfil;
 import br.com.martinsdev.forumhub.domain.perfil.enums.PerfilUsuario;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
 
 @Entity
 @Table(name = "perfis")
@@ -11,7 +12,7 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class Perfil {
+public class Perfil implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,4 +20,9 @@ public class Perfil {
 
     @Enumerated(EnumType.STRING)
     private PerfilUsuario perfilUsuario;
+
+    @Override
+    public String getAuthority() {
+        return "ROLE_" + perfilUsuario;
+    }
 }
