@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
@@ -25,5 +26,12 @@ public class LoginGitHubController {
         headers.setLocation(URI.create(url));
 
         return new ResponseEntity<>(headers, HttpStatus.FOUND);
+    }
+
+    //Pegando o acess token
+    @GetMapping("/autorizado")
+    public ResponseEntity<String> obterTokenAcesso(@RequestParam String code) {
+        var token = loginGitHubService.obterTokenAcesso(code);
+        return ResponseEntity.ok(token);
     }
 }
