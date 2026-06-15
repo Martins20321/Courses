@@ -1,8 +1,9 @@
 package br.com.martinsdev.forumhub.controller;
 
-import br.com.martinsdev.forumhub.domain.authentication.dto.DadosLoginDTO;
+import br.com.martinsdev.forumhub.domain.authentication.dto.DadosRequestLoginDTO;
 import br.com.martinsdev.forumhub.domain.refreshtoken.RefreshToken;
 import br.com.martinsdev.forumhub.domain.refreshtoken.RefreshTokenRepository;
+import br.com.martinsdev.forumhub.domain.refreshtoken.RefreshTokenService;
 import br.com.martinsdev.forumhub.domain.usuario.Usuario;
 import br.com.martinsdev.forumhub.domain.usuario.UsuarioRepository;
 import br.com.martinsdev.forumhub.infra.exception.RefreshTokenException;
@@ -28,9 +29,10 @@ public class LoginController {
     private final TokenService tokenService;
     private final UsuarioRepository repository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final RefreshTokenService refreshTokenService;
 
     @PostMapping("/login")
-    public ResponseEntity<DadosTokenJWT> efetuarLogin(@RequestBody @Valid DadosLoginDTO dadosDTO) {
+    public ResponseEntity<DadosTokenJWT> efetuarLogin(@RequestBody @Valid DadosRequestLoginDTO dadosDTO) {
         var authenticationToken = new UsernamePasswordAuthenticationToken(dadosDTO.email(), dadosDTO.password());
         var authentication = authenticationManager.authenticate(authenticationToken); //Processo de autenticação
         var tokenJWT = tokenService.gerarToken((Usuario) authentication.getPrincipal());
@@ -40,23 +42,7 @@ public class LoginController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<DadosTokenJWT> atualizarToken(@RequestBody @Valid DadosRefreshTokenDTO dados){
-        tokenService.getSubject(dados.refreshToken());
-        RefreshToken refreshToken = refreshTokenRepository.findByToken(dados.refreshToken())
-                .orElseThrow(() -> new RefreshTokenException("Token inválido ou expirado: " + dados.refreshToken()));
-
-        if (refreshToken.isUtilizado()){
-            throw new RefreshTokenException("Este token já foi utilizado!");
-        }
-
-        refreshToken.setUtilizado(true);
-        refreshTokenRepository.save(refreshToken);
-
-        Usuario usuario = refreshToken.getUsuario();
-
-        var tokenJWT = tokenService.gerarToken(usuario);
-        var tokenAtualizado = tokenService.gerarRefreshToken(usuario);
-
-        return ResponseEntity.ok().body(new DadosTokenJWT(tokenJWT, tokenAtualizado.toString()));
+    public ResponseEntity<DadosTokenJWT> atualizarToken(@RequestBody @Valid DadosRefreshTokenDTO refreshTokenDTO){
+        return ResponseEntity.ok().body(refreshTokenService.atualizarToken(refreshTokenDTO));
     }
 }

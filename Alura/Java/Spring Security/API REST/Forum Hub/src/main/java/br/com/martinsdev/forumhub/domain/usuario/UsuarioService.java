@@ -35,6 +35,7 @@ public class UsuarioService implements UserDetailsService {
             throw new RegraDeNegocioException("Já existe uma conta cadastrada com esse email!");
         }
 
+        //Definindo perfil padrão para um usuário
         var perfil = perfilRepository.findByTipo(PerfilUsuario.ESTUDANTE)
                 .orElseThrow(() -> new RegraDeNegocioException("Não foi possível encontrar o perfil informado!"));
         Usuario usuario = new Usuario(dadosDTO, passwordEncoder.encode(dadosDTO.senha()), perfil);
