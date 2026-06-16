@@ -31,7 +31,7 @@ public class LoginGitHubController {
     //Pegando o acess token
     @GetMapping("/autorizado")
     public ResponseEntity<String> obterTokenAcesso(@RequestParam String code) {
-        var token = loginGitHubService.obterTokenAcesso(code);
+        var token = loginGitHubService.obterEmail(code);
         return ResponseEntity.ok(token);
     }
 }
