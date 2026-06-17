@@ -44,6 +44,7 @@ public class LoginGitHubService {
         var headers = new HttpHeaders();
         headers.setBearerAuth(token);
 
+        //Faz a requisição
         var response = restClient.get()
                 .uri("https://api.github.com/user/emails")
                 .headers(httpHeaders -> httpHeaders.addAll(headers)) //Envia o cabeçalho

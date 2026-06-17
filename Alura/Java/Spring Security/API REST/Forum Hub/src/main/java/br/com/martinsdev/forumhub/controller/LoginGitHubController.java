@@ -1,10 +1,16 @@
 package br.com.martinsdev.forumhub.controller;
 
 import br.com.martinsdev.forumhub.domain.authentication.github.LoginGitHubService;
+import br.com.martinsdev.forumhub.domain.usuario.Usuario;
+import br.com.martinsdev.forumhub.domain.usuario.UsuarioService;
+import br.com.martinsdev.forumhub.infra.security.DadosResponseToken;
+import br.com.martinsdev.forumhub.infra.security.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +24,8 @@ import java.net.URI;
 public class LoginGitHubController {
 
     private final LoginGitHubService loginGitHubService;
+    private final UsuarioService usuarioService;
+    private final TokenService tokenService;
 
     @GetMapping
     public ResponseEntity<Void> redirecionarGitHub() {
@@ -28,10 +36,17 @@ public class LoginGitHubController {
         return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
 
-    //Pegando o acess token
     @GetMapping("/autorizado")
-    public ResponseEntity<String> obterTokenAcesso(@RequestParam String code) {
-        var token = loginGitHubService.obterEmail(code);
-        return ResponseEntity.ok(token);
+    public ResponseEntity<DadosResponseToken> autenticarUsuarioOAuth(@RequestParam String code) {
+        var email = loginGitHubService.obterEmail(code);
+        var usuario = usuarioService.loadUserByUsername(email);
+
+        var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        var tokenAcesso = tokenService.gerarToken((Usuario) authentication.getPrincipal());
+        var refresthToken = tokenService.gerarRefreshToken((Usuario) authentication.getPrincipal());
+
+        return ResponseEntity.ok(new DadosResponseToken(tokenAcesso, refresthToken));
     }
 }

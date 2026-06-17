@@ -3,7 +3,7 @@ package br.com.martinsdev.forumhub.domain.refreshtoken;
 import br.com.martinsdev.forumhub.domain.usuario.Usuario;
 import br.com.martinsdev.forumhub.infra.exception.RefreshTokenException;
 import br.com.martinsdev.forumhub.infra.security.DadosRefreshTokenDTO;
-import br.com.martinsdev.forumhub.infra.security.DadosTokenJWT;
+import br.com.martinsdev.forumhub.infra.security.DadosResponseToken;
 import br.com.martinsdev.forumhub.infra.security.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ public class RefreshTokenService {
     private final RefreshTokenRepository repository;
 
     @Transactional
-    public DadosTokenJWT atualizarToken(DadosRefreshTokenDTO refreshTokenDTO) {
+    public DadosResponseToken atualizarToken(DadosRefreshTokenDTO refreshTokenDTO) {
         tokenService.getSubject(refreshTokenDTO.refreshToken());
         RefreshToken refreshToken = repository.findByToken(refreshTokenDTO.refreshToken())
                 .orElseThrow(() -> new RefreshTokenException("Token inválido ou expirado: " + refreshTokenDTO.refreshToken()));
@@ -34,6 +34,6 @@ public class RefreshTokenService {
         var tokenJWT = tokenService.gerarToken(usuario);
         var tokenAtualizado = tokenService.gerarRefreshToken(usuario);
 
-        return new DadosTokenJWT(tokenJWT, tokenAtualizado);
+        return new DadosResponseToken(tokenJWT, tokenAtualizado);
     }
 }

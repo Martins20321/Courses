@@ -32,7 +32,9 @@ public class Usuario implements UserDetails {
     private String biografia;
     private String headLine;
     private boolean verificado;
+    @Column(name = "token")
     private String tokenIdentificador;
+    @Column(name = "expiracao_token")
     private LocalDateTime tokenExpiracao;
     private boolean ativo = true;
 
