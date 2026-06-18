@@ -1,5 +1,6 @@
 package br.com.martinsdev.forumhub.domain.authentication.github;
 
+import br.com.martinsdev.forumhub.domain.usuario.UsuarioRepository;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;

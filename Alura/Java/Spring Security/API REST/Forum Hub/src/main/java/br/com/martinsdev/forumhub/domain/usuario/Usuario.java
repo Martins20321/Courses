@@ -17,6 +17,7 @@ import java.util.UUID;
 @Table(name = "usuarios")
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
@@ -43,7 +44,7 @@ public class Usuario implements UserDetails {
     @JoinTable(name = "usuarios_perfis" ,
     joinColumns = @JoinColumn(name = "usuario_id"),
     inverseJoinColumns = @JoinColumn(name = "perfil_id"))
-    private List<Perfil> perfis = new ArrayList<>();
+    private List<Perfil> perfis;
 
     public Usuario(DadosCadastroUsuarioDTO dadosDTO, String encode, Perfil perfil) {
         this.nomeCompleto = dadosDTO.nomeCompleto();

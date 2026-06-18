@@ -19,9 +19,9 @@ public class UsuarioController {
 
     @PostMapping("/registrar")
     public ResponseEntity<DadosListagemUsuario> cadastrar(@RequestBody @Valid DadosCadastroUsuarioDTO dadosDTO){
-        Usuario usuario = service.cadastrar(dadosDTO);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{nomeUsuario}").buildAndExpand(usuario.getNickName()).toUri();
-        return ResponseEntity.created(uri).body(new DadosListagemUsuario(usuario));
+        DadosListagemUsuario usuario = service.cadastrar(dadosDTO);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{nomeUsuario}").buildAndExpand(usuario.nickName()).toUri();
+        return ResponseEntity.created(uri).body(usuario);
     }
 
     @GetMapping("verificar-conta")
