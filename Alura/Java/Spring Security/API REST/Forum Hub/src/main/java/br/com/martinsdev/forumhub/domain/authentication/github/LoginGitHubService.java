@@ -23,7 +23,7 @@ public class LoginGitHubService {
         return "https://github.com/login/oauth/authorize" +
                 "?client_id=" + client_id +
                 "&redirect_uri=" + redirect_uri +
-                "&scope=read:user,user:email";
+                "&scope=read:user,user:email,public_repo";
     }
 
     private String obterTokenAcesso(String code) {
@@ -51,6 +51,14 @@ public class LoginGitHubService {
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .body(DadosEmailDTO[].class);
+
+        var repositories = restClient.get()
+                .uri("https://api.github.com/user/repos")
+                .headers(httpHeaders -> httpHeaders.addAll(headers)) //Envia o cabeçalho
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .body(String.class);
+        System.out.println(repositories);
 
         for (DadosEmailDTO d : response) {
             if (d.primary() && d.verified()) {
