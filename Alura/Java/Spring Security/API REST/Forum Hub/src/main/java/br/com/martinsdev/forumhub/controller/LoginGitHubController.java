@@ -40,15 +40,15 @@ public class LoginGitHubController {
 
     @GetMapping("/autorizado")
     public ResponseEntity<DadosResponseToken> autenticarUsuarioOAuth(@RequestParam String code) {
-        var email = loginGitHubService.obterEmail(code);
+        var dadosGitHubUsuario = loginGitHubService.obterDadosUsuario(code);
 
-        var emailExistente = usuarioService.existePorEmail(email);
+        var emailExistente = usuarioService.existePorEmail(dadosGitHubUsuario.email());
 
         UserDetails usuario;
         if (emailExistente) {
-            usuario = usuarioService.loadUserByUsername(email);
+            usuario = usuarioService.loadUserByUsername(dadosGitHubUsuario.email());
         } else {
-            usuario = usuarioService.cadastrarViaGitHub(email);
+            usuario = usuarioService.cadastrarViaGitHub(dadosGitHubUsuario);
         }
 
         var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());

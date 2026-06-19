@@ -1,6 +1,6 @@
 package br.com.martinsdev.forumhub.domain.usuario;
 
-import br.com.martinsdev.forumhub.domain.perfil.Perfil;
+import br.com.martinsdev.forumhub.domain.authentication.github.DadosGitHubUsuario;
 import br.com.martinsdev.forumhub.domain.perfil.PerfilRepository;
 import br.com.martinsdev.forumhub.domain.perfil.enums.PerfilUsuario;
 import br.com.martinsdev.forumhub.infra.email.EmailService;
@@ -51,13 +51,16 @@ public class UsuarioService implements UserDetailsService {
     }
 
     @Transactional
-    public UserDetails cadastrarViaGitHub(String email) {
+    public UserDetails cadastrarViaGitHub(DadosGitHubUsuario dadosGitHubUsuario) {
         var perfil = perfilRepository.findByTipo(PerfilUsuario.ESTUDANTE)
                 .orElseThrow(() -> new RegraDeNegocioException("Não foi possível encontrar o perfil informado!"));
 
         Usuario usuario = Usuario.builder()
-                .email(email)
+                .nomeCompleto(dadosGitHubUsuario.nomeCompleto() != null ? dadosGitHubUsuario.nomeCompleto() : "Nome Completo")
+                .email(dadosGitHubUsuario.email())
                 .senha(passwordEncoder.encode(UUID.randomUUID().toString()))
+                .nickName(dadosGitHubUsuario.nickName())
+                .biografia(dadosGitHubUsuario.biografia() != null ? dadosGitHubUsuario.biografia() : "")
                 .ativo(true)
                 .verificado(true)
                 .perfis(List.of(perfil))
