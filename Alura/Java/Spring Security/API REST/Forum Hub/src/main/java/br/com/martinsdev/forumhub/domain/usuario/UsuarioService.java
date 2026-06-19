@@ -51,11 +51,11 @@ public class UsuarioService implements UserDetailsService {
     }
 
     @Transactional
-    public Usuario cadastrarViaGitHub(String email) {
+    public UserDetails cadastrarViaGitHub(String email) {
         var perfil = perfilRepository.findByTipo(PerfilUsuario.ESTUDANTE)
                 .orElseThrow(() -> new RegraDeNegocioException("Não foi possível encontrar o perfil informado!"));
 
-        Usuario usuarioGit = Usuario.builder()
+        Usuario usuario = Usuario.builder()
                 .email(email)
                 .senha(passwordEncoder.encode(UUID.randomUUID().toString()))
                 .ativo(true)
@@ -63,8 +63,8 @@ public class UsuarioService implements UserDetailsService {
                 .perfis(List.of(perfil))
                 .build();
 
-        repository.save(usuarioGit);
-        return usuarioGit;
+        repository.save(usuario);
+        return usuario;
     }
 
     @Transactional
@@ -108,7 +108,6 @@ public class UsuarioService implements UserDetailsService {
     }
 
     public boolean existePorEmail(String email) {
-        boolean emailExistente = repository.existsUsuarioByEmail(email);
-        return emailExistente;
+        return repository.existsUsuarioByEmail(email);
     }
 }
