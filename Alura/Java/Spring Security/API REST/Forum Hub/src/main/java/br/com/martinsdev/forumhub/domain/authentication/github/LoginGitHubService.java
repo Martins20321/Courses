@@ -1,7 +1,7 @@
 package br.com.martinsdev.forumhub.domain.authentication.github;
 
-import br.com.martinsdev.forumhub.domain.usuario.UsuarioRepository;
 import br.com.martinsdev.forumhub.infra.exception.RegraDeNegocioException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -12,8 +12,11 @@ import java.util.Map;
 @Service
 public class LoginGitHubService {
 
-    private final String client_id = "Ov23libsEZ5ky0mMT9yq";
-    private final String client_secret = "83010421819e8d4294bc42d520db2da575825ed3";
+    @Value("${github.oauth.client.id}")
+    private String client_id;
+
+    @Value("${github.oauth.client.secret}")
+    private String client_secret;
     private final String redirect_uri = "http://localhost:8080/login/github/autorizado";
     private final RestClient restClient;
 
@@ -25,7 +28,7 @@ public class LoginGitHubService {
         return "https://github.com/login/oauth/authorize" +
                 "?client_id=" + client_id +
                 "&redirect_uri=" + redirect_uri +
-                "&scope=user:email,public_repo";
+                "&scope=read:user, user:email,public_repo";
     }
 
     private String obterTokenAcesso(String code) {
