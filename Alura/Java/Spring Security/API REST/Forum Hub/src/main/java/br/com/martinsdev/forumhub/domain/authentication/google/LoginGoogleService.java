@@ -1,16 +1,13 @@
 package br.com.martinsdev.forumhub.domain.authentication.google;
 
-import br.com.martinsdev.forumhub.domain.authentication.github.DadosGitHubUsuario;
+import br.com.martinsdev.forumhub.domain.usuario.UsuarioRepository;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 @Service
@@ -24,9 +21,11 @@ public class LoginGoogleService {
     private final String redirect_uri = "http://localhost:8080/login/google/autorizado";
     private final String grant_type = "authorization_code";
     private final RestClient restClient;
+    private final UsuarioRepository repository;
 
-    public LoginGoogleService(RestClient.Builder restClientBuilder) {
+    public LoginGoogleService(RestClient.Builder restClientBuilder, UsuarioRepository repository) {
         this.restClient = restClientBuilder.build();
+        this.repository = repository;
     }
 
     public String gerarUrlAutorizacao() {
@@ -34,7 +33,9 @@ public class LoginGoogleService {
                 "?client_id=" + client_id +
                 "&redirect_uri=" + redirect_uri +
                 "&scope=https://www.googleapis.com/auth/userinfo.email" +
-                "&response_type=code";
+                "&response_type=code" +
+                "&access_type=offline" +
+                "&prompt=consent";
     }
 
     //Obtendo o token para poder pegar os dados do usuário
@@ -46,7 +47,7 @@ public class LoginGoogleService {
                 .body(Map.of("code", code, "client_id", client_id, "client_secret", client_secret, "redirect_uri", redirect_uri, "grant_type", grant_type))
                 .retrieve()
                 .body(DadosGoogleResponseTokenDTO.class);
-        return new DadosGoogleResponseTokenDTO(response.id_token(), response.access_token());
+        return new DadosGoogleResponseTokenDTO(response.id_token(), response.access_token(), response.refresh_token());
     }
 
     public String obterEmail(String code) {
@@ -56,5 +57,9 @@ public class LoginGoogleService {
         System.out.println(decodedJWT.getClaims());
 
         return decodedJWT.getClaim("email").asString();
+    }
+
+    public boolean existeEmail(String email) {
+        return repository.existsUsuarioByEmail(email);
     }
 }

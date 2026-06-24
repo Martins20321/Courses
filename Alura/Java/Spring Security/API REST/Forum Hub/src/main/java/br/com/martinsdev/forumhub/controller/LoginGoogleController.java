@@ -3,6 +3,7 @@ package br.com.martinsdev.forumhub.controller;
 import br.com.martinsdev.forumhub.domain.authentication.google.LoginGoogleService;
 import br.com.martinsdev.forumhub.domain.usuario.Usuario;
 import br.com.martinsdev.forumhub.domain.usuario.UsuarioService;
+import br.com.martinsdev.forumhub.infra.exception.RegraDeNegocioException;
 import br.com.martinsdev.forumhub.infra.security.DadosResponseToken;
 import br.com.martinsdev.forumhub.infra.security.TokenService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,8 +44,15 @@ public class LoginGoogleController {
     public ResponseEntity<DadosResponseToken> autenticarUsuarioOAuth(@RequestParam String code) {
         var email = loginGoogleService.obterEmail(code);
 
-        var usuario = usuarioService.loadUserByUsername(email);
+        boolean emailExistente = usuarioService.existePorEmail(email);
 
+        UserDetails usuario;
+        if (emailExistente) {
+            usuario = usuarioService.loadUserByUsername(email);
+        }
+        else {
+            throw new RegraDeNegocioException("Por gentileza, cadastre-se primeiro");
+        }
         var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
