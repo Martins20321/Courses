@@ -51,7 +51,7 @@ public class LoginGoogleController {
             usuario = usuarioService.loadUserByUsername(email);
         }
         else {
-            throw new RegraDeNegocioException("Por gentileza, cadastre-se primeiro");
+            usuario = usuarioService.cadastrarViaGoogle(email);
         }
         var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);

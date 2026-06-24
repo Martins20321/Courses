@@ -71,6 +71,23 @@ public class UsuarioService implements UserDetailsService {
     }
 
     @Transactional
+    public UserDetails cadastrarViaGoogle(String email) {
+        var perfil = perfilRepository.findByTipo(PerfilUsuario.ESTUDANTE)
+                .orElseThrow(() -> new RegraDeNegocioException("Não foi possível encontrar o perfil informado!"));
+
+        Usuario usuario = Usuario.builder()
+                .email(email)
+                .senha(passwordEncoder.encode(UUID.randomUUID().toString()))
+                .ativo(true)
+                .verificado(true)
+                .perfis(List.of(perfil))
+                .build();
+
+        repository.save(usuario);
+        return usuario;
+    }
+
+    @Transactional
     public Usuario atualizarPerfil(Usuario usuarioLogado, DadosAtualizacaoUsuario dadosDTO) {
         Usuario usuario = repository.findByEmailIgnoreCaseAndVerificadoTrue(usuarioLogado.toString())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado no banco de dados!"));
