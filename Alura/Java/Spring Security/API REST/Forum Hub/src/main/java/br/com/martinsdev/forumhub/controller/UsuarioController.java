@@ -24,33 +24,27 @@ public class UsuarioController {
         return ResponseEntity.created(uri).body(usuario);
     }
 
-    @GetMapping("verificar-conta")
+    @GetMapping("/verificar-conta")
     public ResponseEntity<String> verificarEmail(@RequestParam String codigo) {
         service.verificarEmail(codigo);
         return ResponseEntity.ok().body("Conta verificada com sucesso!");
     }
 
-    @PutMapping("editar-perfil")
+    @PutMapping("/editar-perfil")
     public ResponseEntity<DadosListagemUsuario> atualizarUsuario(@AuthenticationPrincipal Usuario usuarioLogado, @RequestBody DadosAtualizacaoUsuario dadosDTO) {
         Usuario usuario = service.atualizarPerfil(usuarioLogado, dadosDTO);
         return ResponseEntity.ok().body(new DadosListagemUsuario(usuario));
     }
 
-    @PatchMapping("editar-senha")
+    @PatchMapping("/editar-senha")
     public ResponseEntity<Void> alterarSenha(@AuthenticationPrincipal Usuario usuarioLogado, @RequestBody @Valid DadosAlteracaoSenha dadosDTO) {
         service.alterarSenha(usuarioLogado, dadosDTO);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("desativar")
+    @DeleteMapping("/desativar")
     public ResponseEntity<Void> deletarUsuario(@AuthenticationPrincipal Usuario usuarioLogado) {
         service.desativarPerfil(usuarioLogado);
         return ResponseEntity.noContent().build();
-    }
-
-    @PatchMapping("/configurar-a2f")
-    public ResponseEntity<String> geraQrCode(@AuthenticationPrincipal Usuario usuarioLogado) {
-        var url = service.gerarUrl(usuarioLogado);
-        return ResponseEntity.ok(url);
     }
 }
