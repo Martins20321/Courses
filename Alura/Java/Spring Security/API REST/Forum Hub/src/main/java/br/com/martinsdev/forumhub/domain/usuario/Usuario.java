@@ -38,6 +38,8 @@ public class Usuario implements UserDetails {
     @Column(name = "expiracao_token")
     private LocalDateTime tokenExpiracao;
     private boolean ativo = true;
+    private String secret;
+    private boolean a2fAtiva;
 
     //Trabalhando com múltiplos perfis
     @ManyToMany(fetch = FetchType.EAGER) //Toda vez que puxar um usuário, queremos ver as permissões do usuário
@@ -107,5 +109,9 @@ public class Usuario implements UserDetails {
         this.nickName = dadosDTO.nickName();
         this.headLine = dadosDTO.headLine();
         this.biografia = dadosDTO.biografia();
+    }
+
+    public void gerarSecret(String secret) {
+        this.secret = secret;
     }
 }

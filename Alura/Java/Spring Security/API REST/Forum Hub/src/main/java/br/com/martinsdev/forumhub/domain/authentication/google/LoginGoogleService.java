@@ -47,7 +47,7 @@ public class LoginGoogleService {
                 .body(Map.of("code", code, "client_id", client_id, "client_secret", client_secret, "redirect_uri", redirect_uri, "grant_type", grant_type))
                 .retrieve()
                 .body(DadosGoogleResponseTokenDTO.class);
-        return new DadosGoogleResponseTokenDTO(response.id_token(), response.access_token(), response.refresh_token());
+            return new DadosGoogleResponseTokenDTO(response.id_token(), response.access_token(), response.refresh_token());
     }
 
     public String obterEmail(String code) {

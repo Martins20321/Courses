@@ -5,6 +5,7 @@ import br.com.martinsdev.forumhub.domain.perfil.PerfilRepository;
 import br.com.martinsdev.forumhub.domain.perfil.enums.PerfilUsuario;
 import br.com.martinsdev.forumhub.infra.email.EmailService;
 import br.com.martinsdev.forumhub.infra.exception.RegraDeNegocioException;
+import br.com.martinsdev.forumhub.infra.security.totp.TotpService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,6 +25,7 @@ public class UsuarioService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
     private final PerfilRepository perfilRepository;
+    private final TotpService totpService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -129,5 +131,15 @@ public class UsuarioService implements UserDetailsService {
 
     public boolean existePorEmail(String email) {
         return repository.existsUsuarioByEmail(email);
+    }
+
+    @Transactional
+    public String gerarUrl(Usuario usuarioLogado) {
+        //Geração da secret utilizando a lib da Atlassian
+        var secret = totpService.gerarSecret();
+        usuarioLogado.gerarSecret(secret);
+        repository.save(usuarioLogado);
+
+        return totpService.gerarQrCode(usuarioLogado);
     }
 }
