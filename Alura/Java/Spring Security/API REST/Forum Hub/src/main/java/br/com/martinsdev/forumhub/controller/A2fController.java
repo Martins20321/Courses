@@ -22,4 +22,10 @@ public class A2fController {
         var url = usuarioService.gerarUrl(usuarioLogado);
         return ResponseEntity.ok(url);
     }
+
+    @PatchMapping("/ativar-a2f")
+    public ResponseEntity<Void> ativarA2f(@RequestParam String code, @AuthenticationPrincipal Usuario usuarioLogado) {
+        usuarioService.ativarA2f(code, usuarioLogado);
+        return ResponseEntity.noContent().build();
+    }
 }
