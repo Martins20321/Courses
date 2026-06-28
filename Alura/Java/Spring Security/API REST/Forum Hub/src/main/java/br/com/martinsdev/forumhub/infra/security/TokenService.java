@@ -26,7 +26,7 @@ public class TokenService {
 
     private final RefreshTokenRepository repository;
 
-    public String gerarToken(Usuario usuario){
+    public String gerarToken(Usuario usuario) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secretKey);
             return JWT.create()
@@ -35,7 +35,7 @@ public class TokenService {
                     .withExpiresAt(dataExpiracao())
                     .withClaim("id", usuario.getId())
                     .sign(algorithm);
-        } catch (JWTCreationException exception){
+        } catch (JWTCreationException exception) {
             throw new ErroTokenJWTException("Não foi possível fazer a geração do token JWT!");
         }
     }
@@ -52,21 +52,37 @@ public class TokenService {
                     .sign(algorithm);
             repository.save(new RefreshToken(null, refreshToken, false, usuario));
             return refreshToken;
-        } catch (JWTCreationException exception){
+        } catch (JWTCreationException exception) {
             throw new ErroTokenJWTException("Não foi possível fazer a geração do Refresh Token JWT!");
         }
     }
 
-    public String getSubject(String token){
+    public String gerarTokenTemp(Usuario usuario) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secretKey);
-             return JWT.require(algorithm)
+            String tokenTemp = JWT.create()
+                    .withIssuer("Forum Hub")
+                    .withSubject(usuario.getEmail())
+                    .withJWTId(UUID.randomUUID().toString()) //Garante que cada TokenTemp seja único
+                    .withExpiresAt(dataExpiracaoTokenTemp())
+                    .withClaim("email", usuario.getEmail())
+                    .sign(algorithm);
+            return tokenTemp;
+        } catch (JWTCreationException exception) {
+            throw new ErroTokenJWTException("Não foi possível fazer a geração do Token Temporário!");
+        }
+    }
+
+    public String getSubject(String token) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secretKey);
+            return JWT.require(algorithm)
                     .withIssuer("Forum Hub")
                     .build()
-                     .verify(token)
-                     .getSubject();
+                    .verify(token)
+                    .getSubject();
 
-        } catch (JWTVerificationException exception){
+        } catch (JWTVerificationException exception) {
             throw new ErroTokenJWTException("Este token está inválido ou expirado!");
         }
     }
@@ -77,5 +93,9 @@ public class TokenService {
 
     private Instant dataExpiracaoRefreshToken() {
         return LocalDateTime.now().plusDays(7).toInstant(ZoneOffset.of("-03:00"));
+    }
+
+    private Instant dataExpiracaoTokenTemp() {
+        return LocalDateTime.now().plusMinutes(5).toInstant(ZoneOffset.of("-03:00"));
     }
 }

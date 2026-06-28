@@ -34,20 +34,25 @@ public class LoginController {
         var authenticationToken = new UsernamePasswordAuthenticationToken(dadosDTO.email(), dadosDTO.password());
         var authentication = authenticationManager.authenticate(authenticationToken); //Processo de autenticação
 
+
         var usuario = (Usuario) authentication.getPrincipal();
+        var tokenTemp = tokenService.gerarTokenTemp(usuario);
         if (usuario.isA2fAtiva()) {
-            return ResponseEntity.ok(new DadosResponseToken(null, null, true)); //Front recebe e redirecionada para /verificar-a2f
+            return ResponseEntity.ok(new DadosResponseToken(null, null, tokenTemp, true)); //Front recebe e redireciona para /verificar-a2f
         }
 
         var tokenJWT = tokenService.gerarToken(usuario);
         var refreshToken = tokenService.gerarRefreshToken(usuario);
 
-        return ResponseEntity.ok().body(new DadosResponseToken(tokenJWT, refreshToken.toString(), false));
+
+        return ResponseEntity.ok().body(new DadosResponseToken(tokenJWT, refreshToken.toString(), tokenTemp,false));
     }
 
+    //O front redireciona e fazemos a validação do código
     @PostMapping("/verificar-a2f")
     public ResponseEntity<DadosResponseToken> verificarSegundoFator(@Valid @RequestBody DadosA2fDTO dadosA2fDTO) {
-        var usuario = usuarioService.loadUserByUsername(dadosA2fDTO.email());
+        var subject = tokenService.getSubject(dadosA2fDTO.tokenTemp());
+        var usuario = usuarioService.loadUserByUsername(subject);
         var codigoValido = totpService.validarCodigo(dadosA2fDTO.code(), (Usuario) usuario);
 
         if (!codigoValido) {
@@ -56,7 +61,7 @@ public class LoginController {
 
         var tokenJWT = tokenService.gerarToken((Usuario) usuario);
         var refreshToken = tokenService.gerarRefreshToken((Usuario) usuario);
-        return ResponseEntity.ok().body(new DadosResponseToken(tokenJWT, refreshToken.toString(), false));
+        return ResponseEntity.ok().body(new DadosResponseToken(tokenJWT, refreshToken.toString(),null, true));
     }
 
     @PostMapping("/refresh")
