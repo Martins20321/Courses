@@ -34,6 +34,6 @@ public class RefreshTokenService {
         var tokenJWT = tokenService.gerarToken(usuario);
         var tokenAtualizado = tokenService.gerarRefreshToken(usuario);
 
-        return new DadosResponseToken(tokenJWT, tokenAtualizado);
+        return new DadosResponseToken(tokenJWT, tokenAtualizado, false);
     }
 }

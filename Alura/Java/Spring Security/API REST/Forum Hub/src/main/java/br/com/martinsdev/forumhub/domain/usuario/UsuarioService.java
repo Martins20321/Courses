@@ -145,13 +145,15 @@ public class UsuarioService implements UserDetailsService {
 
     public void ativarA2f(String code, Usuario usuarioLogado) {
         if (usuarioLogado.isA2fAtiva()) {
-            throw new RegraDeNegocioException("Sua autenticação de dois fatores já está ativada");
+            throw new RegraDeNegocioException("A autenticação de dois fatores já está ativa");
         }
 
-        var codigoValido = totpService.verificarCodigo(code, usuarioLogado);
+        var codigoValido = totpService.validarCodigo(code, usuarioLogado);
+
         if (!codigoValido) {
-            throw new RegraDeNegocioException("O código é inválido");
+            throw new RegraDeNegocioException("Código inválido!");
         }
+
         usuarioLogado.setA2fAtiva(true);
         repository.save(usuarioLogado);
     }

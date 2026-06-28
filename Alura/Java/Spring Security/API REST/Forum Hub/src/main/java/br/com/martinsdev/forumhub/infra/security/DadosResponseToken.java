@@ -1,5 +1,6 @@
 package br.com.martinsdev.forumhub.infra.security;
 
 public record DadosResponseToken(String token,
-                            String refreshToken) {
+                                 String refreshToken,
+                                 Boolean a2f) {
 }

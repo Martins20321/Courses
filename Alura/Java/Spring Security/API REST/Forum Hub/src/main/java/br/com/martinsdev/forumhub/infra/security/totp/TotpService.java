@@ -21,15 +21,13 @@ public class TotpService {
         );
     }
 
-    public Boolean verificarCodigo(String code, Usuario usuarioLogado) {
+    public boolean validarCodigo(String code, Usuario usuarioLogado) {
         var secretDecodificada = TOTPSecret.Companion.fromBase32EncodedString(usuarioLogado.getSecret());
-
-        //Gerando o código para 3 janelas, pois o usuário pode ter horários diferentes
         var generator = new TOTPGenerator();
 
-        var codigoAplicacao = generator.generate(secretDecodificada, 1, 1);
+        var codigosAutenticacao = generator.generate(secretDecodificada, 1 , 1);
 
-        return codigoAplicacao.stream().anyMatch(totp ->
-                totp.getValue().equals(code));
+        return codigosAutenticacao.stream().anyMatch(
+                totp -> totp.getValue().equals(code));
     }
 }
