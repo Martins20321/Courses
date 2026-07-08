@@ -1,7 +1,6 @@
 package com.estudosmartins.alurafood.pagamentos.service;
 
 import com.estudosmartins.alurafood.pagamentos.dto.PagamentoCreateRequestDTO;
-import com.estudosmartins.alurafood.pagamentos.dto.PagamentoRequestDTO;
 import com.estudosmartins.alurafood.pagamentos.dto.PagamentoResponseDTO;
 import com.estudosmartins.alurafood.pagamentos.dto.PagamentoUpdateRequestDTO;
 import com.estudosmartins.alurafood.pagamentos.exception.ResourceNotFoundException;
@@ -33,6 +32,7 @@ public class PagamentoService {
     public PagamentoResponseDTO createPagamento(PagamentoCreateRequestDTO pagamentoRequestDTO) {
         Pagamento pagamento = Pagamento.builder()
                 .valor(pagamentoRequestDTO.valor())
+                .numero(pagamentoRequestDTO.numero())
                 .nome(pagamentoRequestDTO.nome())
                 .expiracao(pagamentoRequestDTO.expiracao())
                 .codigo(pagamentoRequestDTO.codigo())
