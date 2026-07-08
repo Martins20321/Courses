@@ -3,7 +3,7 @@ package com.estudosmartins.alurafood.pagamentos.service;
 import com.estudosmartins.alurafood.pagamentos.dto.PagamentoCreateRequestDTO;
 import com.estudosmartins.alurafood.pagamentos.dto.PagamentoResponseDTO;
 import com.estudosmartins.alurafood.pagamentos.dto.PagamentoUpdateRequestDTO;
-import com.estudosmartins.alurafood.pagamentos.exception.ResourceNotFoundException;
+import com.estudosmartins.alurafood.pagamentos.infra.exception.ResourceNotFoundException;
 import com.estudosmartins.alurafood.pagamentos.model.Pagamento;
 import com.estudosmartins.alurafood.pagamentos.model.enums.StatusPagamento;
 import com.estudosmartins.alurafood.pagamentos.repository.PagamentoRepository;
@@ -55,6 +55,9 @@ public class PagamentoService {
 
     @Transactional
     public void deletePagamento(Long id) {
-        repository.deleteById(id);
+        Pagamento pagamento = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id));
+        pagamento.setStatus(StatusPagamento.CANCELADO);
+        repository.save(pagamento);
     }
 }

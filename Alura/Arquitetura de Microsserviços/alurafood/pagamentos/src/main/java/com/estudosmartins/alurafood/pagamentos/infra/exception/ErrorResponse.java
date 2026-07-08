@@ -1,4 +1,4 @@
-package com.estudosmartins.alurafood.pagamentos.exception;
+package com.estudosmartins.alurafood.pagamentos.infra.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

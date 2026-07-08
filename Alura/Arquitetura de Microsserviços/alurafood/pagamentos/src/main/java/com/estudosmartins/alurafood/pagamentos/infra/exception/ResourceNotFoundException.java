@@ -1,4 +1,4 @@
-package com.estudosmartins.alurafood.pagamentos.exception;
+package com.estudosmartins.alurafood.pagamentos.infra.exception;
 
 public class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException(Long id) {

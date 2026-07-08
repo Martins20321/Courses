@@ -1,7 +1,7 @@
-package com.estudosmartins.alurafood.pagamentos.handler;
+package com.estudosmartins.alurafood.pagamentos.infra.handler;
 
-import com.estudosmartins.alurafood.pagamentos.exception.ErrorResponse;
-import com.estudosmartins.alurafood.pagamentos.exception.ResourceNotFoundException;
+import com.estudosmartins.alurafood.pagamentos.infra.exception.ErrorResponse;
+import com.estudosmartins.alurafood.pagamentos.infra.exception.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
