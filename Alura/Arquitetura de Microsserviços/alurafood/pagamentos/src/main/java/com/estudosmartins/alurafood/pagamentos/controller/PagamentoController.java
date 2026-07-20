@@ -6,6 +6,7 @@ import com.estudosmartins.alurafood.pagamentos.dto.PagamentoUpdateRequestDTO;
 import com.estudosmartins.alurafood.pagamentos.service.PagamentoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -30,6 +31,11 @@ public class PagamentoController {
     @GetMapping("/{id}")
     public ResponseEntity<PagamentoResponseDTO> findById(@PathVariable Long id) {
         return ResponseEntity.ok(service.findById(id));
+    }
+
+    @GetMapping("/port")
+    public String returnPort(@Value("${local.server.port") String port) {
+        return String.format("Requisição respondida pela instância executando na porta: %s", port);
     }
 
     @PostMapping
