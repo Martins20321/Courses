@@ -3,14 +3,14 @@ package br.com.alurafood.pedidos.service;
 import br.com.alurafood.pedidos.dto.PedidoDto;
 import br.com.alurafood.pedidos.dto.StatusDto;
 import br.com.alurafood.pedidos.model.Pedido;
-import br.com.alurafood.pedidos.model.Status;
+import br.com.alurafood.pedidos.model.StatusPedido;
 import br.com.alurafood.pedidos.repository.PedidoRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,7 +24,6 @@ public class PedidoService {
 
     @Autowired
     private final ModelMapper modelMapper;
-
 
     public List<PedidoDto> obterTodos() {
         return repository.findAll().stream()
@@ -43,7 +42,7 @@ public class PedidoService {
         Pedido pedido = modelMapper.map(dto, Pedido.class);
 
         pedido.setDataHora(LocalDateTime.now());
-        pedido.setStatus(Status.REALIZADO);
+        pedido.setStatus(StatusPedido.REALIZADO);
         pedido.getItens().forEach(item -> item.setPedido(pedido));
         Pedido salvo = repository.save(pedido);
 
@@ -71,7 +70,7 @@ public class PedidoService {
             throw new EntityNotFoundException();
         }
 
-        pedido.setStatus(Status.PAGO);
-        repository.atualizaStatus(Status.PAGO, pedido);
+        pedido.setStatus(StatusPedido.PAGO);
+        repository.atualizaStatus(StatusPedido.PAGO, pedido);
     }
 }

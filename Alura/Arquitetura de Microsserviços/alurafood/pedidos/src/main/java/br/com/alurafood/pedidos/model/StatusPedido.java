@@ -1,6 +1,6 @@
 package br.com.alurafood.pedidos.model;
 
-public enum Status {
+public enum StatusPedido {
     REALIZADO,
     CANCELADO,
     PAGO,
