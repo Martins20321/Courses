@@ -62,7 +62,7 @@ public class PedidoService {
         return modelMapper.map(pedido, PedidoDto.class);
     }
 
-    public void aprovaPagamentoPedido(Long id) {
+    public void atualizarPagamento(Long id) {
 
         Pedido pedido = repository.porIdComItens(id);
 
@@ -73,4 +73,5 @@ public class PedidoService {
         pedido.setStatus(StatusPedido.PAGO);
         repository.atualizaStatus(StatusPedido.PAGO, pedido);
     }
+
 }

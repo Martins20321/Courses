@@ -33,6 +33,7 @@ public class PedidoController {
         return ResponseEntity.ok(dto);
     }
 
+
     @GetMapping("/port")
     public String returnPort(@Value("${local.server.port}") String port) {
         return String.format("Requisição responsdda pela instância executando na porta: %s", port);
@@ -51,14 +52,12 @@ public class PedidoController {
     @PutMapping("/{id}/status")
     public ResponseEntity<PedidoDto> atualizaStatus(@PathVariable Long id, @RequestBody StatusDto status) {
         PedidoDto dto = service.atualizaStatus(id, status);
-
         return ResponseEntity.ok(dto);
     }
 
-
     @PutMapping("/{id}/pago")
-    public ResponseEntity<Void> aprovaPagamento(@PathVariable @NotNull Long id) {
-        service.aprovaPagamentoPedido(id);
+    public ResponseEntity<Void> atualizarPagamento(@PathVariable Long id) {
+        service.atualizarPagamento(id);
         return ResponseEntity.ok().build();
     }
 }
