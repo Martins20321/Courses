@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "item_do_pedido")
 @Getter
@@ -28,4 +30,6 @@ public class ItemDoPedido {
     @ManyToOne(optional=false)
     private Pedido pedido;
 
+    public ItemDoPedido(List<ItemDoPedido> itensPedido) {
+    }
 }

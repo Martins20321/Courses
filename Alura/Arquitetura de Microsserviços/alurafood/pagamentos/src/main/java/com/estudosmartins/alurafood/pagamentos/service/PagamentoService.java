@@ -1,18 +1,19 @@
 package com.estudosmartins.alurafood.pagamentos.service;
 
-import com.estudosmartins.alurafood.pagamentos.dto.PagamentoCreateRequestDTO;
-import com.estudosmartins.alurafood.pagamentos.dto.PagamentoResponseDTO;
-import com.estudosmartins.alurafood.pagamentos.dto.PagamentoUpdateRequestDTO;
+import com.estudosmartins.alurafood.pagamentos.dto.*;
 import com.estudosmartins.alurafood.pagamentos.infra.client.PedidoClient;
 import com.estudosmartins.alurafood.pagamentos.infra.exception.ResourceNotFoundException;
 import com.estudosmartins.alurafood.pagamentos.model.Pagamento;
 import com.estudosmartins.alurafood.pagamentos.model.enums.StatusPagamento;
 import com.estudosmartins.alurafood.pagamentos.repository.PagamentoRepository;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -25,9 +26,12 @@ public class PagamentoService {
         return repository.findAll(pageable).map(PagamentoResponseDTO::new);
     }
 
-    public PagamentoResponseDTO findById(Long id) {
-        return repository.findById(id).map(PagamentoResponseDTO::new)
+    public PagamentoDetailsResponseDTO findById(Long id) {
+        Pagamento pagamento = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
+
+        List<ItemDoPedidoDTO> itensPedido = pedidoClient.buscarItensPedido(pagamento.getPedidoId());
+        return new PagamentoDetailsResponseDTO(pagamento, itensPedido);
     }
 
     @Transactional
@@ -64,6 +68,7 @@ public class PagamentoService {
     }
 
     @Transactional
+    @CircuitBreaker(name = "atualizarPedido", fallbackMethod = "fallbackConfirmarPagamento")
     public void confirmarPagamento(Long id) {
         Pagamento pagamento = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
@@ -71,5 +76,14 @@ public class PagamentoService {
         pagamento.setStatus(StatusPagamento.CONFIRMADO);
         repository.save(pagamento);
         pedidoClient.atualizarPagamento(pagamento.getPedidoId());
+    }
+
+    //Resposta alternativa ao usuário quando o Circuite Breaker estiver com estado ABERTO
+    public void fallbackConfirmarPagamento(Long id, Exception e) {
+        Pagamento pagamento = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id));
+
+        pagamento.setStatus(StatusPagamento.CONFIRMADO_SEM_INTEGRACAO);
+        repository.save(pagamento);
     }
 }

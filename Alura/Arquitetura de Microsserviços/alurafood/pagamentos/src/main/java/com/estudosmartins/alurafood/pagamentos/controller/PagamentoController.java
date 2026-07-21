@@ -1,9 +1,11 @@
 package com.estudosmartins.alurafood.pagamentos.controller;
 
 import com.estudosmartins.alurafood.pagamentos.dto.PagamentoCreateRequestDTO;
+import com.estudosmartins.alurafood.pagamentos.dto.PagamentoDetailsResponseDTO;
 import com.estudosmartins.alurafood.pagamentos.dto.PagamentoResponseDTO;
 import com.estudosmartins.alurafood.pagamentos.dto.PagamentoUpdateRequestDTO;
 import com.estudosmartins.alurafood.pagamentos.service.PagamentoService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +31,7 @@ public class PagamentoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PagamentoResponseDTO> findById(@PathVariable Long id) {
+    public ResponseEntity<PagamentoDetailsResponseDTO> findById(@PathVariable Long id) {
         return ResponseEntity.ok(service.findById(id));
     }
 
@@ -59,6 +61,6 @@ public class PagamentoController {
     @PatchMapping("/{id}/confirmar")
     public ResponseEntity<Void> confirmarPagamento(@PathVariable Long id) {
         service.confirmarPagamento(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }

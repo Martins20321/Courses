@@ -1,5 +1,6 @@
 package br.com.alurafood.pedidos.controller;
 
+import br.com.alurafood.pedidos.dto.ItemDoPedidoDto;
 import br.com.alurafood.pedidos.dto.PedidoDto;
 import br.com.alurafood.pedidos.dto.StatusDto;
 import br.com.alurafood.pedidos.service.PedidoService;
@@ -29,10 +30,13 @@ public class PedidoController {
     @GetMapping("/{id}")
     public ResponseEntity<PedidoDto> listarPorId(@PathVariable @NotNull Long id) {
         PedidoDto dto = service.obterPorId(id);
-
         return ResponseEntity.ok(dto);
     }
 
+    @GetMapping("/{id}/itens-pedido")
+    public ResponseEntity<List<ItemDoPedidoDto>> buscarItensPedido(@PathVariable Long id) {
+        return ResponseEntity.ok(service.buscarItensPedido(id));
+    }
 
     @GetMapping("/port")
     public String returnPort(@Value("${local.server.port}") String port) {
