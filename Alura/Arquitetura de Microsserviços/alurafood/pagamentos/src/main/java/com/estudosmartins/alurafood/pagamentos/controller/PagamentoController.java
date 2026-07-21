@@ -55,4 +55,10 @@ public class PagamentoController {
         service.deletePagamento(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PatchMapping("/{id}/confirmar")
+    public ResponseEntity<Void> confirmarPagamento(@PathVariable Long id) {
+        service.confirmarPagamento(id);
+        return ResponseEntity.noContent().build();
+    }
 }

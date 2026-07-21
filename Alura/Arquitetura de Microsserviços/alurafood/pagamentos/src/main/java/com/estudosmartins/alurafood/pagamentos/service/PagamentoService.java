@@ -3,6 +3,7 @@ package com.estudosmartins.alurafood.pagamentos.service;
 import com.estudosmartins.alurafood.pagamentos.dto.PagamentoCreateRequestDTO;
 import com.estudosmartins.alurafood.pagamentos.dto.PagamentoResponseDTO;
 import com.estudosmartins.alurafood.pagamentos.dto.PagamentoUpdateRequestDTO;
+import com.estudosmartins.alurafood.pagamentos.infra.client.PedidoClient;
 import com.estudosmartins.alurafood.pagamentos.infra.exception.ResourceNotFoundException;
 import com.estudosmartins.alurafood.pagamentos.model.Pagamento;
 import com.estudosmartins.alurafood.pagamentos.model.enums.StatusPagamento;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PagamentoService {
 
     private final PagamentoRepository repository;
+    private final PedidoClient pedidoClient;
 
     public Page<PagamentoResponseDTO> findAllPagamentos(Pageable pageable) {
         return repository.findAll(pageable).map(PagamentoResponseDTO::new);
@@ -59,5 +61,15 @@ public class PagamentoService {
                 .orElseThrow(() -> new ResourceNotFoundException(id));
         pagamento.setStatus(StatusPagamento.CANCELADO);
         repository.save(pagamento);
+    }
+
+    @Transactional
+    public void confirmarPagamento(Long id) {
+        Pagamento pagamento = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id));
+
+        pagamento.setStatus(StatusPagamento.CONFIRMADO);
+        repository.save(pagamento);
+        pedidoClient.atualizarPagamento(pagamento.getPedidoId());
     }
 }
