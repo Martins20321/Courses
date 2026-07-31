@@ -7,7 +7,7 @@ import software.constructs.Construct;
 
 public class AluraVpcStack extends Stack {
 
-    private Vpc vpc;
+    private final Vpc vpc;
 
     public AluraVpcStack(final Construct scope, final String id) {
         this(scope, id, null);
@@ -17,7 +17,7 @@ public class AluraVpcStack extends Stack {
         super(scope, id, props);
 
         //Criando a VPC
-        Vpc vpc = Vpc.Builder.create(this, "AluraVpc")
+        this.vpc = Vpc.Builder.create(this, "AluraVpc")
                 .maxAzs(3)  // Default is all AZs in region. A VPC vai abranger até 3 AZs
                 .build();
     }
