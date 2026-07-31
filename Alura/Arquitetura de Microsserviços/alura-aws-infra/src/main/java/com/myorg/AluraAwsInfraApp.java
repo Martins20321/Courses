@@ -11,6 +11,8 @@ public class AluraAwsInfraApp {
         AluraVpcStack vpcStack = new AluraVpcStack(app, "Vpc"); //Sobe uma stack VPC, aonde possui todos os recursos relacionados a rede
         AluraClusterStack clusterStack = new AluraClusterStack(app, "Cluster", vpcStack.getVpc());
         clusterStack.addStackDependency(vpcStack);
+        AluraServiceStack serviceStack = new AluraServiceStack(app, "Service",clusterStack.getCluster());
+        serviceStack.addStackDependency(clusterStack);
         app.synth();
     }
 }
