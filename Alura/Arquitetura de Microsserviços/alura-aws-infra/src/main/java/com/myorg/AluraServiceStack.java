@@ -3,6 +3,8 @@ package com.myorg;
 import software.amazon.awscdk.Fn;
 import software.amazon.awscdk.Stack;
 import software.amazon.awscdk.StackProps;
+import software.amazon.awscdk.services.ecr.IRepository;
+import software.amazon.awscdk.services.ecr.Repository;
 import software.amazon.awscdk.services.ecs.Cluster;
 import software.amazon.awscdk.services.ecs.ContainerImage;
 import software.amazon.awscdk.services.ecs.patterns.ApplicationLoadBalancedFargateService;
@@ -19,6 +21,8 @@ public class AluraServiceStack extends Stack {
     public AluraServiceStack(final Construct scope, final String id, final StackProps props, final Cluster cluster) {
         super(scope, id, props);
 
+        IRepository iRepository = Repository.fromRepositoryName(this, "repository", "josemartins07/alura-pedidos-ms");
+
         // Create a load-balanced Fargate service and make it public
         ApplicationLoadBalancedFargateService.Builder.create(this, "AluraService")
                 .serviceName("alura-service-estudos")
@@ -30,7 +34,7 @@ public class AluraServiceStack extends Stack {
                 .assignPublicIp(true)   //Atribui IP público ao container
                 .taskImageOptions(
                         ApplicationLoadBalancedTaskImageOptions.builder()
-                                .image(ContainerImage.fromRegistry("josemartins07/alurafood-pedidos:latest"))
+                                .image(ContainerImage.fromEcrRepository(iRepository))
                                 .containerPort(8080)
                                 .containerName("app_pedidos_db")
                                 .environment(Map.of(
