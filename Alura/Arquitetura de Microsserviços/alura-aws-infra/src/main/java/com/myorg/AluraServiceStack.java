@@ -1,5 +1,6 @@
 package com.myorg;
 
+import software.amazon.awscdk.Fn;
 import software.amazon.awscdk.Stack;
 import software.amazon.awscdk.StackProps;
 import software.amazon.awscdk.services.ecs.Cluster;
@@ -7,6 +8,8 @@ import software.amazon.awscdk.services.ecs.ContainerImage;
 import software.amazon.awscdk.services.ecs.patterns.ApplicationLoadBalancedFargateService;
 import software.amazon.awscdk.services.ecs.patterns.ApplicationLoadBalancedTaskImageOptions;
 import software.constructs.Construct;
+
+import java.util.Map;
 
 public class AluraServiceStack extends Stack {
     public AluraServiceStack(final Construct scope, final String id, final Cluster cluster) {
@@ -27,9 +30,15 @@ public class AluraServiceStack extends Stack {
                 .assignPublicIp(true)   //Atribui IP público ao container
                 .taskImageOptions(
                         ApplicationLoadBalancedTaskImageOptions.builder()
-                                .image(ContainerImage.fromRegistry("jacquelineoliveira/ola:1.0"))
+                                .image(ContainerImage.fromRegistry("josemartins07/alurafood-pedidos:latest"))
                                 .containerPort(8080)
-                                .containerName("app_ola_estudos")
+                                .containerName("app_pedidos_db")
+                                .environment(Map.of(
+                                        "SPRING_DATASOURCE_URL", "jdbc:mysql://" +
+                                                Fn.importValue("pedidos-db-endpoint")
+                                                + ":3306/alurafood-pedidos?createDatabaseIfNotExist=true",
+                                        "SPRING_DATASOURCE_USERNAME","admin",
+                                        "SPRING_DATASOURCE_PASSWORD", Fn.importValue("pedidos-db-senha")))
                                 .build())
                 .memoryLimitMiB(1024)       // Default is 512
                 .publicLoadBalancer(true)   // LB acessível pela internet

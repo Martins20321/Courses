@@ -30,7 +30,7 @@ public class AluraRdsStack extends Stack {
         //Criando a instância do banco
         DatabaseInstance databaseInstance = DatabaseInstance.Builder
                 .create(this, "Rds-pedidos")
-                .instanceIdentifier("alura-aws-pedido") //Instância RDS - Aparece no Console
+                .instanceIdentifier("alura-aws-pedido-db") //Instância RDS - Aparece no Console
                 .engine(DatabaseInstanceEngine.mysql(MySqlInstanceEngineProps.builder()
                         .version(MysqlEngineVersion.VER_8_0_42)
                         .build()))
