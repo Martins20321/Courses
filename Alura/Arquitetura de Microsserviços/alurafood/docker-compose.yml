@@ -1,0 +1,37 @@
+services:
+  mysql-pagamentos:
+    image: mysql:latest
+    container_name: mysql-pagamentos
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=alurafood_pagamento
+      - MYSQL_USER=developer
+      - MYSQL_PASSWORD=123456789
+
+  mysql-pedidos:
+    image: mysql:latest
+    container_name: mysql-pedidos
+    restart: always
+    ports:
+      - "3307:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=alurafood-pedidos
+      - MYSQL_USER=developer
+      - MYSQL_PASSWORD=123456789
+
+  rabbitmq:
+    image: rabbitmq:3.10-management
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672" #Protocolo AMQP
+      - "15672:15672" #Interface para Gerenciamento RabbitMQ
+    volumes:
+      - ./dados:/var/lib/rabbitmq/
+    environment:
+      - RABBITMQ_DEFAULT_USER=martinsdev
+      - RABBITMQ_DEFAULT_PASS=martins
