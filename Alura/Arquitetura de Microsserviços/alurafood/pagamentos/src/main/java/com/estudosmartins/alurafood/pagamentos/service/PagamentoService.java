@@ -8,6 +8,8 @@ import com.estudosmartins.alurafood.pagamentos.model.enums.StatusPagamento;
 import com.estudosmartins.alurafood.pagamentos.repository.PagamentoRepository;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ public class PagamentoService {
 
     private final PagamentoRepository repository;
     private final PedidoClient pedidoClient;
+    private final RabbitTemplate rabbitTemplate;
 
     public Page<PagamentoResponseDTO> findAllPagamentos(Pageable pageable) {
         return repository.findAll(pageable).map(PagamentoResponseDTO::new);
@@ -47,6 +50,9 @@ public class PagamentoService {
                 .formaDePagamentoId(pagamentoRequestDTO.formaDePagamentoId())
                 .build();
         repository.save(pagamento);
+
+        Message message = new Message(("Pagamento criado com id " + pagamento.getId()).getBytes());
+        rabbitTemplate.send("pagamento.concluido", message);
         return new PagamentoResponseDTO(pagamento);
     }
 
