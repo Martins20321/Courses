@@ -1,5 +1,7 @@
 package com.estudosmartins.alurafood.pagamentos.amqp;
 
+import org.springframework.amqp.core.Exchange;
+import org.springframework.amqp.core.ExchangeBuilder;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -15,9 +17,10 @@ import org.springframework.context.annotation.Configuration;
 public class PagamentoAMQPConfiguration {
     //Aqui declaramos os recursos do RabbitMQ
 
+    //Criação da Exchange. O producer possui conhecimento somente da exchange, as queues são criadas pelos consumers
     @Bean
-    public Queue criarFila() {
-        return QueueBuilder.nonDurable("pagamento.concluido").build();  //Durável: A fila vai existir mesmo se o broker reiniciar ou cair?
+    public Exchange fanoutExchange() {
+        return ExchangeBuilder.fanoutExchange("pagamentos.ex").build();
     }
 
     //Pega os recursos declarados e envia para o broker RabbitMQ

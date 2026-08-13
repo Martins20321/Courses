@@ -52,7 +52,8 @@ public class PagamentoService {
                 .build();
         repository.save(pagamento);
 
-        rabbitTemplate.convertAndSend("pagamento.concluido", new PagamentoConcluidoEvent(pagamento));
+        //Routing key vai ser ignorada devido ao modelo de fanout
+        rabbitTemplate.convertAndSend("pagamentos.ex","", new PagamentoConcluidoEvent(pagamento));
         return new PagamentoResponseDTO(pagamento);
     }
 
