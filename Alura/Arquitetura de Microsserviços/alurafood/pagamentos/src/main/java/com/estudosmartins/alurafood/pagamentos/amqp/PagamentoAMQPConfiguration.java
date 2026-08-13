@@ -1,9 +1,6 @@
 package com.estudosmartins.alurafood.pagamentos.amqp;
 
-import org.springframework.amqp.core.Exchange;
-import org.springframework.amqp.core.ExchangeBuilder;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.QueueBuilder;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -19,7 +16,7 @@ public class PagamentoAMQPConfiguration {
 
     //Criação da Exchange. O producer possui conhecimento somente da exchange, as queues são criadas pelos consumers
     @Bean
-    public Exchange fanoutExchange() {
+    public FanoutExchange fanoutExchange() {
         return ExchangeBuilder.fanoutExchange("pagamentos.ex").build();
     }
 
