@@ -2,14 +2,15 @@ package br.com.alurafood.pedidos.amqp;
 
 import br.com.alurafood.pedidos.event.PagamentoConcluidoEvent;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PagamentoListener {
 
     //Metodo para receber as mensagens
-    @RabbitListener(queues = "pagamento.concluido") //Quero receber mensagens dessa fila. Listener = Se torna um ouvinte desta fila
-    public void receberMensagens(PagamentoConcluidoEvent pagamento) {
+    @RabbitListener(queues = "pagamentos.detalhes-pedido") //Quero receber mensagens dessa fila. Listener = Se torna um ouvinte desta fila
+    public void receberMensagens(@Payload PagamentoConcluidoEvent pagamento) {
         //Formatação da mensagem, como vou receber
         String message = """
                 Dados do Pagamento: %s
