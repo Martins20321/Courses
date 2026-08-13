@@ -1,6 +1,7 @@
 package com.estudosmartins.alurafood.pagamentos.service;
 
 import com.estudosmartins.alurafood.pagamentos.dto.*;
+import com.estudosmartins.alurafood.pagamentos.event.PagamentoConcluidoEvent;
 import com.estudosmartins.alurafood.pagamentos.infra.client.PedidoClient;
 import com.estudosmartins.alurafood.pagamentos.infra.exception.ResourceNotFoundException;
 import com.estudosmartins.alurafood.pagamentos.model.Pagamento;
@@ -51,8 +52,7 @@ public class PagamentoService {
                 .build();
         repository.save(pagamento);
 
-        Message message = new Message(("Pagamento criado com id " + pagamento.getId()).getBytes());
-        rabbitTemplate.send("pagamento.concluido", message);
+        rabbitTemplate.convertAndSend("pagamento.concluido", new PagamentoConcluidoEvent(pagamento));
         return new PagamentoResponseDTO(pagamento);
     }
 
