@@ -18,22 +18,23 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AvaliacaoAMQPConfiguration {
     @Bean
-    public Jackson2JsonMessageConverter messageConverter(){
-        return  new Jackson2JsonMessageConverter();
+    public Jackson2JsonMessageConverter messageConverter() {
+        return new Jackson2JsonMessageConverter();
     }
 
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory,
-                                         Jackson2JsonMessageConverter messageConverter){
+                                         Jackson2JsonMessageConverter messageConverter) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(messageConverter);
-        return  rabbitTemplate;
+        return rabbitTemplate;
     }
 
     @Bean
     public Queue filaDetalhesAvaliacao() {
         return QueueBuilder
                 .nonDurable("pagamentos.detalhes-avaliacao")
+                .deadLetterExchange("pagamentos.dlx") //Em caso de erro, envia para nossa DLX e envia para a DLQ
                 .build();
     }
 
@@ -48,7 +49,25 @@ public class AvaliacaoAMQPConfiguration {
     public Binding bindPagamentoPedido(Queue filaDetalhesAvaliacao, FanoutExchange fanoutExchange) {
         return BindingBuilder
                 .bind(filaDetalhesAvaliacao)
-                .to(fanoutExchange());
+                .to(fanoutExchange);
+    }
+
+    //DLX
+    @Bean
+    public FanoutExchange fanoutExchangeDLQ() {
+        return ExchangeBuilder.fanoutExchange("pagamentos.dlx").build();
+    }
+
+    //DLQ
+    @Bean
+    public Queue deadLetterQueue() {
+        return QueueBuilder.nonDurable("pagamentos.detalhes-avaliacao-dlq").build();
+    }
+
+    //Biding da DLX com a DLQ
+    @Bean
+    public Binding bindingDlxPagamentoPedido(Queue deadLetterQueue, FanoutExchange fanoutExchangeDLQ) {
+        return BindingBuilder.bind(deadLetterQueue).to(fanoutExchangeDLQ);
     }
 
     @Bean
