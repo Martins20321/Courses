@@ -33,7 +33,9 @@ public class AvaliacaoAMQPConfiguration {
     @Bean
     public Queue filaDetalhesAvaliacao() {
         return QueueBuilder
-                .nonDurable("pagamentos.detalhes-avaliacao")
+                .durable("pagamentos.detalhes-avaliacao")
+                .quorum()  //Usando uma quorum queue = o conteudo das filas sera replicado
+                .withArgument("x-quorum-initial-group-size", 3)
                 .deadLetterExchange("pagamentos.dlx") //Em caso de erro, envia para nossa DLX e envia para a DLQ
                 .build();
     }
